@@ -45,7 +45,7 @@ export function Reports() {
         >
           <FileText size={20} className={reportType === 'class' ? 'text-blue-600' : 'text-gray-500'} />
           <p className={`mt-2 font-bold ${reportType === 'class' ? 'text-blue-900' : 'text-gray-800'}`}>ใบเซ็นชื่อรายห้อง</p>
-          <p className="text-xs text-gray-600 mt-0.5 font-medium">AWAT-03 · สำหรับนักเรียน</p>
+          <p className="text-xs text-gray-600 mt-0.5 font-medium">สำหรับนักเรียน</p>
         </button>
         <button
           onClick={() => { setReportType('subject'); setShowPreview(false) }}
@@ -53,7 +53,7 @@ export function Reports() {
         >
           <FileText size={20} className={reportType === 'subject' ? 'text-purple-600' : 'text-gray-500'} />
           <p className={`mt-2 font-bold ${reportType === 'subject' ? 'text-purple-900' : 'text-gray-800'}`}>ใบเซ็นชื่อรายกลุ่มสาระ</p>
-          <p className="text-xs text-gray-600 mt-0.5 font-medium">AWAT-03 · สำหรับครู</p>
+          <p className="text-xs text-gray-600 mt-0.5 font-medium">สำหรับครู</p>
         </button>
       </div>
 
@@ -94,7 +94,7 @@ export function Reports() {
         <div id="print-area" className="border-2 border-gray-400 rounded-xl bg-white p-8 space-y-6 print:border-none print:p-0">
           {/* Report header */}
           <div className="text-center space-y-1 border-b-2 border-gray-300 pb-4">
-            <p className="text-base font-bold">แบบบันทึกการยืมอุปกรณ์ (AWAT-03)</p>
+            <p className="text-base font-bold">แบบลงชื่อ</p>
             <p className="text-sm font-semibold">
               {reportType === 'class'
                 ? `ชั้นมัธยมศึกษาปีที่ ${selectedGrade}/${selectedClass}`
