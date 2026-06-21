@@ -4,13 +4,14 @@ import { Link } from 'react-router-dom'
 import { getTeachers, getSubjectGroups, deleteTeacher } from '../api/client'
 import { StatusBadge } from '../components/StatusBadge'
 import { AssignModal } from '../components/AssignModal'
+import { useFilterParams } from '../hooks/useFilterParams'
 import { Search, UserPlus, Link2, CheckCircle, Trash2, Users } from 'lucide-react'
-import type { Filters, Teacher } from '../types'
+import type { Teacher } from '../types'
 
 const inputCls = 'rounded-md border-2 border-gray-400 px-3 py-2 text-sm text-gray-900 focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 bg-white'
 
 export function Teachers() {
-  const [filters, setFilters] = useState<Filters>({})
+  const { filters, set, clear, hasFilters } = useFilterParams()
   const [showAdd, setShowAdd] = useState(false)
   const [assigning, setAssigning] = useState<Teacher | null>(null)
   const qc = useQueryClient()
@@ -25,9 +26,6 @@ export function Teachers() {
     mutationFn: (email: string) => deleteTeacher(email),
     onSuccess: () => qc.invalidateQueries({ queryKey: ['teachers'] }),
   })
-
-  const set = (key: keyof Filters, value: string) =>
-    setFilters(f => ({ ...f, [key]: value || undefined }))
 
   return (
     <div className="p-6 space-y-4">
@@ -61,12 +59,12 @@ export function Teachers() {
           <option value="delivered">ส่งมอบแล้ว</option>
           <option value="returned">คืนแล้ว</option>
         </select>
-        {Object.values(filters).some(Boolean) && (
-          <button onClick={() => setFilters({})} className="rounded-md px-3 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-200 border-2 border-transparent hover:border-gray-400">ล้างตัวกรอง</button>
+        {hasFilters && (
+          <button onClick={clear} className="rounded-md px-3 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-200 border-2 border-transparent hover:border-gray-400">ล้างตัวกรอง</button>
         )}
       </div>
 
-      <div className="text-xs font-medium text-gray-600">แสดง {teachers.length} รายการ (ตัวอย่างจากทั้งหมด 200 คน)</div>
+      <div className="text-xs font-medium text-gray-600">แสดง {teachers.length} รายการ</div>
 
       <div className="overflow-x-auto rounded-lg border-2 border-gray-400 bg-white">
         <table className="w-full text-sm">

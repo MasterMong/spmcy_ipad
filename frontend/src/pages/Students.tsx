@@ -4,13 +4,14 @@ import { Link } from 'react-router-dom'
 import { getStudents, deleteAssignment, getClassRooms } from '../api/client'
 import { StatusBadge } from '../components/StatusBadge'
 import { AssignModal } from '../components/AssignModal'
+import { useFilterParams } from '../hooks/useFilterParams'
 import { Search, Upload, Link2, CheckCircle, X, GraduationCap } from 'lucide-react'
-import type { Filters, Student } from '../types'
+import type { Student } from '../types'
 
 const inputCls = 'rounded-md border-2 border-gray-400 px-3 py-2 text-sm text-gray-900 focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 bg-white'
 
 export function Students() {
-  const [filters, setFilters] = useState<Filters>({})
+  const { filters, set, clear, hasFilters } = useFilterParams()
   const [assigning, setAssigning] = useState<Student | null>(null)
   const qc = useQueryClient()
   const { data: classRooms = [] } = useQuery({ queryKey: ['classrooms'], queryFn: getClassRooms })
@@ -26,11 +27,8 @@ export function Students() {
     onSuccess: () => qc.invalidateQueries({ queryKey: ['students'] }),
   })
 
-  const set = (key: keyof Filters, value: string) =>
-    setFilters(f => ({ ...f, [key]: value || undefined }))
-
   const roomsForGrade = filters.grade
-    ? classRooms.filter(c => c.grade === Number(filters.grade)).map(c => c.class_room)
+    ? classRooms.filter(c => c.grade === filters.grade).map(c => c.class_room)
     : []
 
   return (
@@ -83,14 +81,14 @@ export function Students() {
           <option value="delivered">ส่งมอบแล้ว</option>
           <option value="returned">คืนแล้ว</option>
         </select>
-        {Object.values(filters).some(Boolean) && (
-          <button onClick={() => setFilters({})} className="rounded-md px-3 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-200 border-2 border-transparent hover:border-gray-400">
+        {hasFilters && (
+          <button onClick={clear} className="rounded-md px-3 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-200 border-2 border-transparent hover:border-gray-400">
             ล้างตัวกรอง
           </button>
         )}
       </div>
 
-      <div className="text-xs font-medium text-gray-600">แสดง {students.length} รายการ (ตัวอย่างจากทั้งหมด 3,000 คน)</div>
+      <div className="text-xs font-medium text-gray-600">แสดง {students.length} รายการ</div>
 
       <div className="overflow-x-auto rounded-lg border-2 border-gray-400 bg-white">
         <table className="w-full text-sm">
