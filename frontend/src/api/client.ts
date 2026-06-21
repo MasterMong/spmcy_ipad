@@ -45,13 +45,23 @@ export async function getDashboardSummary(): Promise<DashboardSummary> {
 }
 
 // ─── Students ─────────────────────────────────────────────────────────────────
-export async function getStudents(filters: Filters = {}): Promise<(Student & { assignment?: Assignment })[]> {
+export interface StudentPage {
+  items: (Student & { assignment?: Assignment })[]
+  total: number
+  page: number
+  page_size: number
+  pages: number
+}
+
+export async function getStudents(filters: Filters = {}, page = 1, page_size = 50): Promise<StudentPage> {
   if (!USE_MOCK) {
     const params = new URLSearchParams()
     if (filters.grade) params.set('grade', String(filters.grade))
     if (filters.class_room) params.set('class_room', filters.class_room)
     if (filters.status) params.set('status', filters.status)
     if (filters.q) params.set('q', filters.q)
+    params.set('page', String(page))
+    params.set('page_size', String(page_size))
     return apiFetch(`/students?${params}`)
   }
 
@@ -64,11 +74,12 @@ export async function getStudents(filters: Filters = {}): Promise<(Student & { a
   if (filters.status) students = students.filter(s => s.assignment?.status === filters.status)
   if (filters.q) {
     const q = filters.q.toLowerCase()
-    students = students.filter(s =>
-      s.name.toLowerCase().includes(q) || s.student_id.includes(q)
-    )
+    students = students.filter(s => s.name.toLowerCase().includes(q) || s.student_id.includes(q))
   }
-  return students
+  const total = students.length
+  const pages = Math.max(1, Math.ceil(total / page_size))
+  const start = (page - 1) * page_size
+  return { items: students.slice(start, start + page_size), total, page, page_size, pages }
 }
 
 export async function getStudent(studentId: string): Promise<Student & { assignment?: Assignment }> {

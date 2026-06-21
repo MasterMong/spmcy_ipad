@@ -94,3 +94,11 @@ class DashboardSummary(BaseModel):
 class ClassroomItem(BaseModel):
     grade: int
     class_room: str
+
+
+class StudentListOut(BaseModel):
+    items: list[StudentOut]
+    total: int
+    page: int
+    page_size: int
+    pages: int

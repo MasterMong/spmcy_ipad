@@ -18,11 +18,12 @@ export function Reports() {
   const grades = [...new Set(classRooms.map(c => c.grade))].sort()
   const roomsForGrade = selectedGrade ? classRooms.filter(c => c.grade === Number(selectedGrade)).map(c => c.class_room) : []
 
-  const { data: students = [] } = useQuery({
+  const { data: studentPage } = useQuery({
     queryKey: ['students-report', selectedGrade, selectedClass],
-    queryFn: () => getStudents({ grade: selectedGrade ? Number(selectedGrade) as number : undefined, class_room: selectedClass || undefined }),
+    queryFn: () => getStudents({ grade: selectedGrade ? Number(selectedGrade) : undefined, class_room: selectedClass || undefined }, 1, 9999),
     enabled: reportType === 'class' && !!selectedGrade && !!selectedClass,
   })
+  const students = studentPage?.items ?? []
 
   const { data: teachers = [] } = useQuery({
     queryKey: ['teachers-report', selectedSubject],
@@ -35,11 +36,11 @@ export function Reports() {
     (reportType === 'subject' && selectedSubject)
 
   return (
-    <div className="p-6 space-y-5 max-w-4xl">
+    <div className="p-4 sm:p-6 space-y-5 max-w-4xl">
       <h2 className="text-xl font-bold text-gray-900 flex items-center gap-2"><ClipboardList size={20} /> รายงาน / ใบเซ็นชื่อ</h2>
 
       {/* Report type */}
-      <div className="grid grid-cols-2 gap-3">
+      <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 gap-3">
         <button
           onClick={() => { setReportType('class'); setShowPreview(false) }}
           className={`rounded-xl border-2 p-4 text-left transition-colors ${reportType === 'class' ? 'border-blue-600 bg-blue-50' : 'border-gray-400 hover:border-gray-600 hover:bg-gray-50'}`}

@@ -95,7 +95,7 @@ export function ImportStudents() {
   const mutation = mode === 'student' ? studentMutation : teacherMutation
 
   return (
-    <div className="p-6 space-y-5 max-w-4xl">
+    <div className="p-4 sm:p-6 space-y-5 max-w-4xl">
       <h2 className="text-xl font-bold text-gray-900 flex items-center gap-2"><FileUp size={20} /> Import ข้อมูล (CSV)</h2>
 
       {/* Tabs */}
@@ -129,7 +129,7 @@ export function ImportStudents() {
 
       {/* Drop zone */}
       <div
-        className={`rounded-xl border-2 border-dashed p-10 text-center transition-colors cursor-pointer ${dragging ? 'border-blue-500 bg-blue-50' : 'border-gray-400 hover:border-gray-600 hover:bg-gray-50'}`}
+        className={`rounded-xl border-2 border-dashed p-6 sm:p-10 text-center transition-colors cursor-pointer ${dragging ? 'border-blue-500 bg-blue-50' : 'border-gray-400 hover:border-gray-600 hover:bg-gray-50'}`}
         onDragOver={e => { e.preventDefault(); setDragging(true) }}
         onDragLeave={() => setDragging(false)}
         onDrop={e => { e.preventDefault(); setDragging(false); const f = e.dataTransfer.files[0]; if (f) handleFile(f) }}

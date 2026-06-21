@@ -28,7 +28,7 @@ export function Teachers() {
   })
 
   return (
-    <div className="p-6 space-y-4">
+    <div className="p-4 sm:p-6 space-y-4">
       <div className="flex items-center justify-between">
         <h2 className="text-xl font-bold text-gray-900 flex items-center gap-2"><Users size={20} /> รายชื่อครู</h2>
         <button
@@ -40,10 +40,10 @@ export function Teachers() {
       </div>
 
       <div className="flex flex-wrap gap-2">
-        <div className="relative">
+        <div className="relative flex-1 min-w-[180px]">
           <Search size={14} className="absolute left-2.5 top-2.5 text-gray-500" />
           <input
-            className={`pl-8 w-52 ${inputCls}`}
+            className={`pl-8 w-full ${inputCls}`}
             placeholder="ค้นหาชื่อ / อีเมล"
             value={filters.q ?? ''}
             onChange={e => set('q', e.target.value)}
@@ -71,9 +71,9 @@ export function Teachers() {
           <thead>
             <tr className="bg-gray-200 border-b-2 border-gray-400">
               <th className="text-left px-4 py-3 font-bold text-gray-900">ชื่อ-นามสกุล</th>
-              <th className="text-left px-4 py-3 font-bold text-gray-900">กลุ่มสาระ</th>
-              <th className="text-left px-4 py-3 font-bold text-gray-900">อีเมล</th>
-              <th className="text-left px-4 py-3 font-bold text-gray-900">Serial Number</th>
+              <th className="hidden sm:table-cell text-left px-4 py-3 font-bold text-gray-900">กลุ่มสาระ</th>
+              <th className="hidden md:table-cell text-left px-4 py-3 font-bold text-gray-900">อีเมล</th>
+              <th className="hidden sm:table-cell text-left px-4 py-3 font-bold text-gray-900">Serial Number</th>
               <th className="text-left px-4 py-3 font-bold text-gray-900">สถานะ</th>
               <th className="text-left px-4 py-3 font-bold text-gray-900">ดำเนินการ</th>
             </tr>
@@ -84,9 +84,9 @@ export function Teachers() {
             {teachers.map(t => (
               <tr key={t.email} className="hover:bg-gray-50">
                 <td className="px-4 py-3 font-semibold text-gray-900">{t.name}</td>
-                <td className="px-4 py-3 font-semibold text-gray-800">{t.subject_group}</td>
-                <td className="px-4 py-3 text-gray-700 text-xs font-medium">{t.email}</td>
-                <td className="px-4 py-3 font-mono font-semibold text-gray-900">
+                <td className="hidden sm:table-cell px-4 py-3 font-semibold text-gray-800">{t.subject_group}</td>
+                <td className="hidden md:table-cell px-4 py-3 text-gray-700 text-xs font-medium">{t.email}</td>
+                <td className="hidden sm:table-cell px-4 py-3 font-mono font-semibold text-gray-900">
                   {t.assignment?.serial_number ?? <span className="text-gray-400 font-normal">—</span>}
                 </td>
                 <td className="px-4 py-3"><StatusBadge status={t.assignment?.status ?? 'pending'} /></td>

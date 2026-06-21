@@ -6,7 +6,7 @@ from typing import List
 
 from database import get_db
 from models import Student, DeviceAssignment
-from schemas import StudentOut, StudentBase, ClassroomItem
+from schemas import StudentOut, StudentBase, ClassroomItem, StudentListOut
 
 router = APIRouter(prefix="/api/students", tags=["students"])
 
@@ -36,29 +36,35 @@ def import_students_json(rows: List[StudentBase], db: Session = Depends(get_db))
     return {"imported": count}
 
 
-@router.get("", response_model=list[StudentOut])
+@router.get("", response_model=StudentListOut)
 def list_students(
     grade: int | None = None,
     class_room: str | None = None,
     status: str | None = None,
     q: str | None = None,
+    page: int = 1,
+    page_size: int = 50,
     db: Session = Depends(get_db),
 ):
-    stmt = select(Student).options(selectinload(Student.assignment))
+    stmt = select(Student).options(selectinload(Student.assignment)).order_by(Student.grade, Student.class_room, Student.name)
     if grade:
         stmt = stmt.where(Student.grade == grade)
     if class_room:
         stmt = stmt.where(Student.class_room == class_room)
     if q:
         stmt = stmt.where(Student.name.contains(q) | Student.student_id.contains(q))
-    students = db.scalars(stmt).all()
+    students = list(db.scalars(stmt).all())
 
     if status:
         students = [
             s for s in students
             if (s.assignment and s.assignment.status == status) or (status == "pending" and not s.assignment)
         ]
-    return students
+
+    total = len(students)
+    pages = max(1, (total + page_size - 1) // page_size)
+    start = (page - 1) * page_size
+    return {"items": students[start:start + page_size], "total": total, "page": page, "page_size": page_size, "pages": pages}
 
 
 @router.post("/import", status_code=201)

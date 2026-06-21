@@ -11,16 +11,17 @@ import type { Student } from '../types'
 const inputCls = 'rounded-md border-2 border-gray-400 px-3 py-2 text-sm text-gray-900 focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 bg-white'
 
 export function Students() {
-  const { filters, set, clear, hasFilters } = useFilterParams()
+  const { filters, page, set, setPage, clear, hasFilters } = useFilterParams()
   const [assigning, setAssigning] = useState<Student | null>(null)
   const qc = useQueryClient()
   const { data: classRooms = [] } = useQuery({ queryKey: ['classrooms'], queryFn: getClassRooms })
   const grades = [...new Set(classRooms.map(c => c.grade))].sort()
 
-  const { data: students = [], isLoading } = useQuery({
-    queryKey: ['students', filters],
-    queryFn: () => getStudents(filters),
+  const { data, isLoading } = useQuery({
+    queryKey: ['students', filters, page],
+    queryFn: () => getStudents(filters, page),
   })
+  const students = data?.items ?? []
 
   const removeMutation = useMutation({
     mutationFn: (assignmentId: string) => deleteAssignment(assignmentId),
@@ -32,7 +33,7 @@ export function Students() {
     : []
 
   return (
-    <div className="p-6 space-y-4">
+    <div className="p-4 sm:p-6 space-y-4">
       <div className="flex items-center justify-between">
         <h2 className="text-xl font-bold text-gray-900 flex items-center gap-2"><GraduationCap size={20} /> รายชื่อนักเรียน</h2>
         <Link
@@ -45,10 +46,10 @@ export function Students() {
 
       {/* Filters */}
       <div className="flex flex-wrap gap-2">
-        <div className="relative">
+        <div className="relative flex-1 min-w-[180px]">
           <Search size={14} className="absolute left-2.5 top-2.5 text-gray-500" />
           <input
-            className={`pl-8 w-52 ${inputCls}`}
+            className={`pl-8 w-full ${inputCls}`}
             placeholder="ค้นหาชื่อ / รหัสนักเรียน"
             value={filters.q ?? ''}
             onChange={e => set('q', e.target.value)}
@@ -88,16 +89,18 @@ export function Students() {
         )}
       </div>
 
-      <div className="text-xs font-medium text-gray-600">แสดง {students.length} รายการ</div>
+      <div className="text-xs font-medium text-gray-600">
+        {data ? `หน้า ${data.page}/${data.pages} · ทั้งหมด ${data.total.toLocaleString()} รายการ` : 'กำลังโหลด...'}
+      </div>
 
       <div className="overflow-x-auto rounded-lg border-2 border-gray-400 bg-white">
         <table className="w-full text-sm">
           <thead>
             <tr className="bg-gray-200 border-b-2 border-gray-400">
-              <th className="text-left px-4 py-3 font-bold text-gray-900">รหัส</th>
+              <th className="hidden sm:table-cell text-left px-4 py-3 font-bold text-gray-900">รหัส</th>
               <th className="text-left px-4 py-3 font-bold text-gray-900">ชื่อ-นามสกุล</th>
               <th className="text-left px-4 py-3 font-bold text-gray-900">ชั้น/ห้อง</th>
-              <th className="text-left px-4 py-3 font-bold text-gray-900">Serial Number</th>
+              <th className="hidden sm:table-cell text-left px-4 py-3 font-bold text-gray-900">Serial Number</th>
               <th className="text-left px-4 py-3 font-bold text-gray-900">สถานะ</th>
               <th className="text-left px-4 py-3 font-bold text-gray-900">ดำเนินการ</th>
             </tr>
@@ -111,10 +114,10 @@ export function Students() {
             )}
             {students.map(s => (
               <tr key={s.student_id} className="hover:bg-gray-50">
-                <td className="px-4 py-3 font-mono font-semibold text-gray-700 text-xs">{s.student_id}</td>
+                <td className="hidden sm:table-cell px-4 py-3 font-mono font-semibold text-gray-700 text-xs">{s.student_id}</td>
                 <td className="px-4 py-3 font-semibold text-gray-900">{s.name}</td>
                 <td className="px-4 py-3 font-semibold text-gray-800">ม.{s.grade}/{s.class_room}</td>
-                <td className="px-4 py-3 font-mono font-semibold text-gray-900">
+                <td className="hidden sm:table-cell px-4 py-3 font-mono font-semibold text-gray-900">
                   {s.assignment?.serial_number ?? <span className="text-gray-400 font-normal">—</span>}
                 </td>
                 <td className="px-4 py-3">
@@ -158,6 +161,42 @@ export function Students() {
           </tbody>
         </table>
       </div>
+
+      {data && data.pages > 1 && (
+        <div className="flex flex-wrap items-center justify-center gap-1">
+          <button
+            onClick={() => setPage(page - 1)}
+            disabled={page <= 1}
+            className="rounded-md border-2 border-gray-400 px-3 py-1.5 text-sm font-bold text-gray-800 hover:bg-gray-100 disabled:opacity-40 disabled:cursor-not-allowed"
+          >
+            ‹ ก่อนหน้า
+          </button>
+          {Array.from({ length: data.pages }, (_, i) => i + 1)
+            .filter(p => p === 1 || p === data.pages || Math.abs(p - page) <= 2)
+            .reduce<(number | '…')[]>((acc, p, idx, arr) => {
+              if (idx > 0 && p - (arr[idx - 1] as number) > 1) acc.push('…')
+              acc.push(p)
+              return acc
+            }, [])
+            .map((p, i) =>
+              p === '…'
+                ? <span key={`ellipsis-${i}`} className="px-2 text-gray-500">…</span>
+                : <button
+                    key={p}
+                    onClick={() => setPage(p as number)}
+                    className={`rounded-md border-2 px-3 py-1.5 text-sm font-bold ${page === p ? 'border-blue-600 bg-blue-600 text-white' : 'border-gray-400 text-gray-800 hover:bg-gray-100'}`}
+                  >{p}</button>
+            )
+          }
+          <button
+            onClick={() => setPage(page + 1)}
+            disabled={page >= data.pages}
+            className="rounded-md border-2 border-gray-400 px-3 py-1.5 text-sm font-bold text-gray-800 hover:bg-gray-100 disabled:opacity-40 disabled:cursor-not-allowed"
+          >
+            ถัดไป ›
+          </button>
+        </div>
+      )}
 
       {assigning && (
         <AssignModal
