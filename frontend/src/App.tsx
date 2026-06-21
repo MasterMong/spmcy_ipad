@@ -5,7 +5,6 @@ import { Dashboard } from './pages/Dashboard'
 import { Students } from './pages/Students'
 import { ImportStudents } from './pages/ImportStudents'
 import { Teachers } from './pages/Teachers'
-import { Assign } from './pages/Assign'
 import { Confirm } from './pages/Confirm'
 import { Reports } from './pages/Reports'
 
@@ -25,7 +24,6 @@ export default function App() {
             <Route path="/students" element={<Students />} />
             <Route path="/students/import" element={<ImportStudents />} />
             <Route path="/teachers" element={<Teachers />} />
-            <Route path="/assign" element={<Assign />} />
             <Route path="/reports" element={<Reports />} />
           </Route>
         </Routes>

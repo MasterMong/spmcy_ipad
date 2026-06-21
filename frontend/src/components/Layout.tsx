@@ -1,11 +1,10 @@
 import { NavLink, Outlet } from 'react-router-dom'
-import { LayoutDashboard, Users, GraduationCap, Tablet, FileText } from 'lucide-react'
+import { LayoutDashboard, Users, GraduationCap, FileText } from 'lucide-react'
 
 const nav = [
   { to: '/', label: 'Dashboard', icon: LayoutDashboard, end: true },
   { to: '/students', label: 'นักเรียน', icon: GraduationCap },
   { to: '/teachers', label: 'ครู', icon: Users },
-  { to: '/assign', label: 'จับคู่เครื่อง', icon: Tablet },
   { to: '/reports', label: 'รายงาน', icon: FileText },
 ]
 
