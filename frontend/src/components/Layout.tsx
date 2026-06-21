@@ -1,4 +1,6 @@
 import { NavLink, Outlet } from 'react-router-dom'
+import { useQuery } from '@tanstack/react-query'
+import { getDashboardSummary } from '../api/client'
 import { LayoutDashboard, Users, GraduationCap, FileText } from 'lucide-react'
 
 const nav = [
@@ -9,6 +11,8 @@ const nav = [
 ]
 
 export function Layout() {
+  const { data: summary } = useQuery({ queryKey: ['dashboard'], queryFn: getDashboardSummary, staleTime: 30_000 })
+
   return (
     <div className="flex h-screen bg-gray-100">
       <aside className="w-56 shrink-0 bg-gray-900 flex flex-col">
@@ -36,7 +40,9 @@ export function Layout() {
           ))}
         </nav>
         <div className="px-4 py-3 border-t border-gray-700">
-          <p className="text-xs text-gray-500">นักเรียน 3,000 · ครู 200</p>
+          <p className="text-xs text-gray-500">
+            นักเรียน {summary ? summary.total_students.toLocaleString() : '…'} · ครู {summary ? summary.total_teachers.toLocaleString() : '…'}
+          </p>
         </div>
       </aside>
       <main className="flex-1 overflow-auto">
