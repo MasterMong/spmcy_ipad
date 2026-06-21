@@ -1,13 +1,33 @@
 from fastapi import APIRouter, Depends, HTTPException, UploadFile, File
-from sqlalchemy.orm import Session
-from sqlalchemy import select
+from sqlalchemy.orm import Session, selectinload
+from sqlalchemy import select, distinct
 import csv, io
+from typing import List
 
 from database import get_db
 from models import Student, DeviceAssignment
-from schemas import StudentOut
+from schemas import StudentOut, StudentBase, ClassroomItem
 
 router = APIRouter(prefix="/api/students", tags=["students"])
+
+
+@router.get("/classrooms", response_model=list[ClassroomItem])
+def list_classrooms(db: Session = Depends(get_db)):
+    rows = db.execute(
+        select(Student.grade, Student.class_room).distinct().order_by(Student.grade, Student.class_room)
+    ).all()
+    return [{"grade": r.grade, "class_room": r.class_room} for r in rows]
+
+
+@router.post("/import-json", status_code=201)
+def import_students_json(rows: List[StudentBase], db: Session = Depends(get_db)):
+    count = 0
+    for row in rows:
+        if not db.get(Student, row.student_id):
+            db.add(Student(**row.model_dump()))
+            count += 1
+    db.commit()
+    return {"imported": count}
 
 
 @router.get("", response_model=list[StudentOut])
@@ -18,7 +38,7 @@ def list_students(
     q: str | None = None,
     db: Session = Depends(get_db),
 ):
-    stmt = select(Student)
+    stmt = select(Student).options(selectinload(Student.assignment))
     if grade:
         stmt = stmt.where(Student.grade == grade)
     if class_room:

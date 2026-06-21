@@ -188,11 +188,13 @@ export async function deliverAssignment(id: string, deliveredBy: string): Promis
   return mockAssignments.find(a => a.id === id)!
 }
 
-export function getSubjectGroups(): string[] {
+export async function getSubjectGroups(): Promise<string[]> {
+  if (!USE_MOCK) return apiFetch('/teachers/subject-groups')
   return [...new Set(mockTeachers.map(t => t.subject_group))].sort()
 }
 
-export function getClassRooms(): { grade: number; class_room: string }[] {
+export async function getClassRooms(): Promise<{ grade: number; class_room: string }[]> {
+  if (!USE_MOCK) return apiFetch('/students/classrooms')
   const seen = new Set<string>()
   const result: { grade: number; class_room: string }[] = []
   for (const s of mockStudents) {

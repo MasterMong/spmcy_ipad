@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, selectinload
 from sqlalchemy import select
 
 from database import get_db
@@ -9,6 +9,12 @@ from schemas import TeacherCreate, TeacherOut
 router = APIRouter(prefix="/api/teachers", tags=["teachers"])
 
 
+@router.get("/subject-groups", response_model=list[str])
+def list_subject_groups(db: Session = Depends(get_db)):
+    rows = db.execute(select(Teacher.subject_group).distinct().order_by(Teacher.subject_group)).scalars().all()
+    return list(rows)
+
+
 @router.get("", response_model=list[TeacherOut])
 def list_teachers(
     subject_group: str | None = None,
@@ -16,7 +22,7 @@ def list_teachers(
     q: str | None = None,
     db: Session = Depends(get_db),
 ):
-    stmt = select(Teacher)
+    stmt = select(Teacher).options(selectinload(Teacher.assignment))
     if subject_group:
         stmt = stmt.where(Teacher.subject_group == subject_group)
     if q:

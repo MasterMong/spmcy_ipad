@@ -13,7 +13,7 @@ export function Students() {
   const [filters, setFilters] = useState<Filters>({})
   const [assigning, setAssigning] = useState<Student | null>(null)
   const qc = useQueryClient()
-  const classRooms = getClassRooms()
+  const { data: classRooms = [] } = useQuery({ queryKey: ['classrooms'], queryFn: getClassRooms })
   const grades = [...new Set(classRooms.map(c => c.grade))].sort()
 
   const { data: students = [], isLoading } = useQuery({

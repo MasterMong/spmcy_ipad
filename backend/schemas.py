@@ -1,6 +1,6 @@
 from datetime import datetime
 from typing import Literal
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel
 
 
 class StudentBase(BaseModel):
@@ -10,8 +10,26 @@ class StudentBase(BaseModel):
     grade: int
     class_room: str
 
+
+class AssignmentBrief(BaseModel):
+    """Flat assignment — nested inside StudentOut/TeacherOut to avoid circular ref."""
+    id: str
+    serial_number: str
+    mac_address: str | None
+    assignee_type: str
+    student_id: str | None
+    teacher_email: str | None
+    assigned_at: datetime
+    assigned_by: str
+    status: str
+    delivered_at: datetime | None
+    delivered_by: str | None
+    model_config = {"from_attributes": True}
+
+
 class StudentOut(StudentBase):
     created_at: datetime
+    assignment: AssignmentBrief | None = None
     model_config = {"from_attributes": True}
 
 
@@ -20,11 +38,14 @@ class TeacherBase(BaseModel):
     name: str
     subject_group: str
 
+
 class TeacherCreate(TeacherBase):
     pass
 
+
 class TeacherOut(TeacherBase):
     created_at: datetime
+    assignment: AssignmentBrief | None = None
     model_config = {"from_attributes": True}
 
 
@@ -34,6 +55,7 @@ class AssignmentCreate(BaseModel):
     student_id: str | None = None
     teacher_email: str | None = None
     assigned_by: str
+
 
 class AssignmentOut(BaseModel):
     id: str
@@ -47,8 +69,8 @@ class AssignmentOut(BaseModel):
     status: str
     delivered_at: datetime | None
     delivered_by: str | None
-    student: StudentOut | None = None
-    teacher: TeacherOut | None = None
+    student: StudentBase | None = None
+    teacher: TeacherBase | None = None
     model_config = {"from_attributes": True}
 
 
@@ -67,3 +89,8 @@ class DashboardSummary(BaseModel):
     delivered_teachers: int
     returned_teachers: int
     pending_teachers: int
+
+
+class ClassroomItem(BaseModel):
+    grade: int
+    class_room: str

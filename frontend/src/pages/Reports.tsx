@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { getStudents, getTeachers, getClassRooms, getSubjectGroups } from '../api/client'
+
 import { Printer, FileText, ClipboardList } from 'lucide-react'
 
 type ReportType = 'class' | 'subject'
@@ -12,8 +13,8 @@ export function Reports() {
   const [selectedSubject, setSelectedSubject] = useState('')
   const [showPreview, setShowPreview] = useState(false)
 
-  const classRooms = getClassRooms()
-  const subjectGroups = getSubjectGroups()
+  const { data: classRooms = [] } = useQuery({ queryKey: ['classrooms'], queryFn: getClassRooms })
+  const { data: subjectGroups = [] } = useQuery({ queryKey: ['subject-groups'], queryFn: getSubjectGroups })
   const grades = [...new Set(classRooms.map(c => c.grade))].sort()
   const roomsForGrade = selectedGrade ? classRooms.filter(c => c.grade === Number(selectedGrade)).map(c => c.class_room) : []
 

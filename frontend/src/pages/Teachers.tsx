@@ -14,7 +14,7 @@ export function Teachers() {
   const [showAdd, setShowAdd] = useState(false)
   const [assigning, setAssigning] = useState<Teacher | null>(null)
   const qc = useQueryClient()
-  const subjectGroups = getSubjectGroups()
+  const { data: subjectGroups = [] } = useQuery({ queryKey: ['subject-groups'], queryFn: getSubjectGroups })
 
   const { data: teachers = [], isLoading } = useQuery({
     queryKey: ['teachers', filters],
@@ -124,7 +124,7 @@ export function Teachers() {
         </table>
       </div>
 
-      {showAdd && <AddTeacherModal onClose={() => { setShowAdd(false); qc.invalidateQueries({ queryKey: ['teachers'] }) }} />}
+      {showAdd && <AddTeacherModal subjectGroups={subjectGroups} onClose={() => { setShowAdd(false); qc.invalidateQueries({ queryKey: ['teachers'] }) }} />}
       {assigning && (
         <AssignModal
           assigneeType="teacher"
@@ -136,10 +136,9 @@ export function Teachers() {
   )
 }
 
-function AddTeacherModal({ onClose }: { onClose: () => void }) {
+function AddTeacherModal({ subjectGroups, onClose }: { subjectGroups: string[]; onClose: () => void }) {
   const [form, setForm] = useState({ name: '', email: '', subject_group: '' })
   const qc = useQueryClient()
-  const subjectGroups = getSubjectGroups()
 
   const mutation = useMutation({
     mutationFn: () => import('../api/client').then(m => m.addTeacher(form)),
