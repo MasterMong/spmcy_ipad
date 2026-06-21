@@ -1,0 +1,22 @@
+[
+  { "email": "somchai@school.ac.th", "name": "นายสมชาย ใจดี", "subject_group": "ภาษาไทย", "created_at": "2025-05-01T08:00:00Z" },
+  { "email": "malee@school.ac.th", "name": "นางมาลี งามเนตร", "subject_group": "ภาษาไทย", "created_at": "2025-05-01T08:00:00Z" },
+  { "email": "wichai@school.ac.th", "name": "นายวิชัย คณิตดี", "subject_group": "คณิตศาสตร์", "created_at": "2025-05-01T08:00:00Z" },
+  { "email": "supaporn@school.ac.th", "name": "นางสาวสุภาพร ตรงใจ", "subject_group": "คณิตศาสตร์", "created_at": "2025-05-01T08:00:00Z" },
+  { "email": "prasit@school.ac.th", "name": "นายประสิทธิ์ วิทยา", "subject_group": "วิทยาศาสตร์และเทคโนโลยี", "created_at": "2025-05-01T08:00:00Z" },
+  { "email": "nattaya@school.ac.th", "name": "นางณัฐยา ลาภมาก", "subject_group": "วิทยาศาสตร์และเทคโนโลยี", "created_at": "2025-05-01T08:00:00Z" },
+  { "email": "apinya@school.ac.th", "name": "นางสาวอาพินยา ใฝ่รู้", "subject_group": "วิทยาศาสตร์และเทคโนโลยี", "created_at": "2025-05-01T08:00:00Z" },
+  { "email": "kraisorn@school.ac.th", "name": "นายไกรสร ประวัติ", "subject_group": "สังคมศึกษา ศาสนาและวัฒนธรรม", "created_at": "2025-05-01T08:00:00Z" },
+  { "email": "chanya@school.ac.th", "name": "นางชัญญา ศรัทธาดี", "subject_group": "สังคมศึกษา ศาสนาและวัฒนธรรม", "created_at": "2025-05-01T08:00:00Z" },
+  { "email": "surachai@school.ac.th", "name": "นายสุรชัย แข็งแรง", "subject_group": "สุขศึกษาและพลศึกษา", "created_at": "2025-05-01T08:00:00Z" },
+  { "email": "jintana@school.ac.th", "name": "นางจินตนา ร่าเริง", "subject_group": "สุขศึกษาและพลศึกษา", "created_at": "2025-05-01T08:00:00Z" },
+  { "email": "sombat@school.ac.th", "name": "นายสมบัติ ศิลป์งาม", "subject_group": "ศิลปะ", "created_at": "2025-05-01T08:00:00Z" },
+  { "email": "ratree@school.ac.th", "name": "นางรัตรี วาดเขียน", "subject_group": "ศิลปะ", "created_at": "2025-05-01T08:00:00Z" },
+  { "email": "prayoon@school.ac.th", "name": "นายประยูร ช่างฝีมือ", "subject_group": "การงานอาชีพ", "created_at": "2025-05-01T08:00:00Z" },
+  { "email": "duangjai@school.ac.th", "name": "นางดวงใจ อุตสาหะ", "subject_group": "การงานอาชีพ", "created_at": "2025-05-01T08:00:00Z" },
+  { "email": "suwan@school.ac.th", "name": "นายสุวรรณ ภาษาดี", "subject_group": "ภาษาต่างประเทศ", "created_at": "2025-05-01T08:00:00Z" },
+  { "email": "kanokwan@school.ac.th", "name": "นางกนกวรรณ อังกฤษดี", "subject_group": "ภาษาต่างประเทศ", "created_at": "2025-05-01T08:00:00Z" },
+  { "email": "phairat@school.ac.th", "name": "นายไพรัตน์ พัฒนา", "subject_group": "ภาษาต่างประเทศ", "created_at": "2025-05-01T08:00:00Z" },
+  { "email": "siriporn@school.ac.th", "name": "นางสาวศิริพร ขยัน", "subject_group": "ภาษาไทย", "created_at": "2025-05-01T08:00:00Z" },
+  { "email": "teerachai@school.ac.th", "name": "นายธีรชัย เก่งกาจ", "subject_group": "คณิตศาสตร์", "created_at": "2025-05-01T08:00:00Z" }
+]
