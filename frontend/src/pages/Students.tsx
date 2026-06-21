@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 import { getStudents, deleteAssignment, getClassRooms } from '../api/client'
 import { StatusBadge } from '../components/StatusBadge'
 import { AssignModal } from '../components/AssignModal'
-import { Search, Upload } from 'lucide-react'
+import { Search, Upload, Link2, CheckCircle, X, GraduationCap } from 'lucide-react'
 import type { Filters, Student } from '../types'
 
 const inputCls = 'rounded-md border-2 border-gray-400 px-3 py-2 text-sm text-gray-900 focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 bg-white'
@@ -36,7 +36,7 @@ export function Students() {
   return (
     <div className="p-6 space-y-4">
       <div className="flex items-center justify-between">
-        <h2 className="text-xl font-bold text-gray-900">รายชื่อนักเรียน</h2>
+        <h2 className="text-xl font-bold text-gray-900 flex items-center gap-2"><GraduationCap size={20} /> รายชื่อนักเรียน</h2>
         <Link
           to="/students/import"
           className="flex items-center gap-1.5 rounded-md border-2 border-gray-400 px-3 py-1.5 text-sm font-bold text-gray-800 hover:bg-gray-200 hover:border-gray-500"
@@ -127,24 +127,24 @@ export function Students() {
                     {!s.assignment && (
                       <button
                         onClick={() => setAssigning(s)}
-                        className="rounded px-2.5 py-1 text-xs font-bold bg-blue-600 text-white hover:bg-blue-700 border border-blue-700"
+                        className="inline-flex items-center gap-1 rounded px-2.5 py-1 text-xs font-bold bg-blue-600 text-white hover:bg-blue-700 border border-blue-700"
                       >
-                        จับคู่
+                        <Link2 size={11} /> จับคู่
                       </button>
                     )}
                     {s.assignment?.status === 'assigned' && (
                       <>
                         <Link
                           to={`/confirm/${s.assignment.id}`}
-                          className="rounded px-2.5 py-1 text-xs font-bold bg-green-600 text-white hover:bg-green-700 border border-green-700"
+                          className="inline-flex items-center gap-1 rounded px-2.5 py-1 text-xs font-bold bg-green-600 text-white hover:bg-green-700 border border-green-700"
                         >
-                          ยืนยัน
+                          <CheckCircle size={11} /> ยืนยัน
                         </Link>
                         <button
                           onClick={() => { if (confirm('ยกเลิกการจับคู่?')) removeMutation.mutate(s.assignment!.id) }}
-                          className="rounded px-2.5 py-1 text-xs font-bold bg-white text-red-700 hover:bg-red-50 border-2 border-red-400"
+                          className="inline-flex items-center gap-1 rounded px-2.5 py-1 text-xs font-bold bg-white text-red-700 hover:bg-red-50 border-2 border-red-400"
                         >
-                          ยกเลิก
+                          <X size={11} /> ยกเลิก
                         </button>
                       </>
                     )}

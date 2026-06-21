@@ -145,9 +145,10 @@ export function Confirm() {
           <button
             onClick={() => mutation.mutate()}
             disabled={!deliveredBy.trim() || mutation.isPending}
-            className="w-full rounded-xl bg-green-600 py-3 text-base font-semibold text-white hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full inline-flex items-center justify-center gap-2 rounded-xl bg-green-600 py-3 text-base font-bold text-white hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {mutation.isPending ? 'กำลังบันทึก...' : '✓ ยืนยันรับเครื่องแล้ว'}
+            <CheckCircle size={18} />
+            {mutation.isPending ? 'กำลังบันทึก...' : 'ยืนยันรับเครื่องแล้ว'}
           </button>
 
           <p className="text-center text-xs text-gray-400">

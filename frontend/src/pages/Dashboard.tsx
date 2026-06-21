@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react'
 import { getDashboardSummary, getAssignments } from '../api/client'
 import { StatCard } from '../components/StatCard'
 import { StatusBadge } from '../components/StatusBadge'
+import { GraduationCap, Users, PackageCheck, Clock, CircleSlash } from 'lucide-react'
 import type { Assignment } from '../types'
 
 export function Dashboard() {
@@ -34,21 +35,21 @@ export function Dashboard() {
       {summary && (
         <>
           <div>
-            <p className="text-xs font-bold text-gray-700 uppercase tracking-wider mb-3">นักเรียน</p>
+            <p className="text-xs font-bold text-gray-700 uppercase tracking-wider mb-3 flex items-center gap-1.5"><GraduationCap size={14} /> นักเรียน</p>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-              <StatCard label="ทั้งหมด" value={summary.total_students} color="blue" />
-              <StatCard label="ส่งมอบแล้ว" value={summary.delivered_students} color="green" />
-              <StatCard label="จับคู่แล้ว รอส่ง" value={summary.assigned_students} color="yellow" />
-              <StatCard label="ยังไม่จับคู่" value={summary.pending_students} color="red" />
+              <StatCard label="ทั้งหมด" value={summary.total_students} color="blue" icon={GraduationCap} />
+              <StatCard label="ส่งมอบแล้ว" value={summary.delivered_students} color="green" icon={PackageCheck} />
+              <StatCard label="จับคู่แล้ว รอส่ง" value={summary.assigned_students} color="yellow" icon={Clock} />
+              <StatCard label="ยังไม่จับคู่" value={summary.pending_students} color="red" icon={CircleSlash} />
             </div>
           </div>
           <div>
-            <p className="text-xs font-bold text-gray-700 uppercase tracking-wider mb-3">ครู</p>
+            <p className="text-xs font-bold text-gray-700 uppercase tracking-wider mb-3 flex items-center gap-1.5"><Users size={14} /> ครู</p>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-              <StatCard label="ทั้งหมด" value={summary.total_teachers} color="blue" />
-              <StatCard label="ส่งมอบแล้ว" value={summary.delivered_teachers} color="green" />
-              <StatCard label="จับคู่แล้ว รอส่ง" value={summary.assigned_teachers} color="yellow" />
-              <StatCard label="ยังไม่จับคู่" value={summary.pending_teachers} color="red" />
+              <StatCard label="ทั้งหมด" value={summary.total_teachers} color="blue" icon={Users} />
+              <StatCard label="ส่งมอบแล้ว" value={summary.delivered_teachers} color="green" icon={PackageCheck} />
+              <StatCard label="จับคู่แล้ว รอส่ง" value={summary.assigned_teachers} color="yellow" icon={Clock} />
+              <StatCard label="ยังไม่จับคู่" value={summary.pending_teachers} color="red" icon={CircleSlash} />
             </div>
           </div>
         </>

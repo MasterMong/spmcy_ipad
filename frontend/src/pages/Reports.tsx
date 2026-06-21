@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { getStudents, getTeachers, getClassRooms, getSubjectGroups } from '../api/client'
-import { Printer, FileText } from 'lucide-react'
+import { Printer, FileText, ClipboardList } from 'lucide-react'
 
 type ReportType = 'class' | 'subject'
 
@@ -35,7 +35,7 @@ export function Reports() {
 
   return (
     <div className="p-6 space-y-5 max-w-4xl">
-      <h2 className="text-xl font-bold text-gray-900">รายงาน / ใบเซ็นชื่อ</h2>
+      <h2 className="text-xl font-bold text-gray-900 flex items-center gap-2"><ClipboardList size={20} /> รายงาน / ใบเซ็นชื่อ</h2>
 
       {/* Report type */}
       <div className="grid grid-cols-2 gap-3">

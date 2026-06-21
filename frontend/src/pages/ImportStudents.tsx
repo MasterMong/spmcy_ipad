@@ -2,7 +2,7 @@ import { useState, useRef } from 'react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useNavigate } from 'react-router-dom'
 import { importStudents } from '../api/client'
-import { Upload, CheckCircle, AlertCircle } from 'lucide-react'
+import { Upload, CheckCircle, AlertCircle, FileUp } from 'lucide-react'
 import type { Student } from '../types'
 
 type PreviewRow = Omit<Student, 'created_at'> & { error?: string }
@@ -63,7 +63,7 @@ export function ImportStudents() {
   return (
     <div className="p-6 space-y-5 max-w-4xl">
       <div className="flex items-center justify-between">
-        <h2 className="text-xl font-bold text-gray-900">Import รายชื่อนักเรียน (CSV)</h2>
+        <h2 className="text-xl font-bold text-gray-900 flex items-center gap-2"><FileUp size={20} /> Import รายชื่อนักเรียน (CSV)</h2>
         <button
           onClick={() => {
             const blob = new Blob([SAMPLE_CSV], { type: 'text/csv' })
