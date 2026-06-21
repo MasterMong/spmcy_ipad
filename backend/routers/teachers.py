@@ -1,12 +1,30 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session, selectinload
 from sqlalchemy import select
+from typing import List
 
 from database import get_db
 from models import Teacher
 from schemas import TeacherCreate, TeacherOut
 
 router = APIRouter(prefix="/api/teachers", tags=["teachers"])
+
+
+@router.post("/import-json", status_code=201)
+def import_teachers_json(rows: List[TeacherCreate], db: Session = Depends(get_db)):
+    from sqlalchemy.exc import IntegrityError
+    count = 0
+    for row in rows:
+        if db.get(Teacher, row.email):
+            continue
+        try:
+            db.add(Teacher(**row.model_dump()))
+            db.flush()
+            count += 1
+        except IntegrityError:
+            db.rollback()
+    db.commit()
+    return {"imported": count}
 
 
 @router.get("/subject-groups", response_model=list[str])

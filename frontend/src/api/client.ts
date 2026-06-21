@@ -89,6 +89,17 @@ export async function importStudents(rows: Omit<Student, 'created_at'>[]): Promi
   return { imported: toAdd.length }
 }
 
+export async function importTeachers(rows: Omit<Teacher, 'created_at'>[]): Promise<{ imported: number }> {
+  if (!USE_MOCK) {
+    return apiFetch('/teachers/import-json', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(rows) })
+  }
+  const newTeachers: Teacher[] = rows.map(r => ({ ...r, created_at: new Date().toISOString() }))
+  const existingEmails = new Set(mockTeachers.map(t => t.email))
+  const toAdd = newTeachers.filter(t => !existingEmails.has(t.email))
+  mockTeachers = [...mockTeachers, ...toAdd]
+  return { imported: toAdd.length }
+}
+
 // ─── Teachers ─────────────────────────────────────────────────────────────────
 export async function getTeachers(filters: Filters = {}): Promise<(Teacher & { assignment?: Assignment })[]> {
   if (!USE_MOCK) {
