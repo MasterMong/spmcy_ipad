@@ -12,7 +12,7 @@ interface Props {
 
 export function AssignModal({ person, assigneeType, onClose }: Props) {
   const [sn, setSn] = useState('')
-  const [assignedBy, setAssignedBy] = useState('')
+  const [assignedBy, setAssignedBy] = useState(() => localStorage.getItem('assignedBy') ?? '')
   const [scanning, setScanning] = useState(false)
   const snRef = useRef<HTMLInputElement>(null)
   const qc = useQueryClient()
@@ -108,7 +108,7 @@ export function AssignModal({ person, assigneeType, onClose }: Props) {
             className="w-full rounded-md border-2 border-gray-400 px-3 py-2 text-sm text-gray-900 focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 placeholder:text-gray-400"
             placeholder="ชื่อกรรมการ / ครูที่ปรึกษา"
             value={assignedBy}
-            onChange={e => setAssignedBy(e.target.value)}
+            onChange={e => { setAssignedBy(e.target.value); localStorage.setItem('assignedBy', e.target.value) }}
             onKeyDown={e => { if (e.key === 'Enter' && canSubmit) mutation.mutate() }}
           />
         </div>
