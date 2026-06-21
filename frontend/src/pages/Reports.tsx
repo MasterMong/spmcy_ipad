@@ -35,25 +35,25 @@ export function Reports() {
 
   return (
     <div className="p-6 space-y-5 max-w-4xl">
-      <h2 className="text-xl font-semibold text-gray-900">รายงาน / ใบเซ็นชื่อ</h2>
+      <h2 className="text-xl font-bold text-gray-900">รายงาน / ใบเซ็นชื่อ</h2>
 
       {/* Report type */}
       <div className="grid grid-cols-2 gap-3">
         <button
           onClick={() => { setReportType('class'); setShowPreview(false) }}
-          className={`rounded-xl border-2 p-4 text-left transition-colors ${reportType === 'class' ? 'border-blue-500 bg-blue-50' : 'border-gray-200 hover:border-gray-300'}`}
+          className={`rounded-xl border-2 p-4 text-left transition-colors ${reportType === 'class' ? 'border-blue-600 bg-blue-50' : 'border-gray-400 hover:border-gray-600 hover:bg-gray-50'}`}
         >
-          <FileText size={20} className={reportType === 'class' ? 'text-blue-600' : 'text-gray-400'} />
-          <p className={`mt-2 font-semibold ${reportType === 'class' ? 'text-blue-800' : 'text-gray-700'}`}>ใบเซ็นชื่อรายห้อง</p>
-          <p className="text-xs text-gray-500 mt-0.5">AWAT-03 · สำหรับนักเรียน</p>
+          <FileText size={20} className={reportType === 'class' ? 'text-blue-600' : 'text-gray-500'} />
+          <p className={`mt-2 font-bold ${reportType === 'class' ? 'text-blue-900' : 'text-gray-800'}`}>ใบเซ็นชื่อรายห้อง</p>
+          <p className="text-xs text-gray-600 mt-0.5 font-medium">AWAT-03 · สำหรับนักเรียน</p>
         </button>
         <button
           onClick={() => { setReportType('subject'); setShowPreview(false) }}
-          className={`rounded-xl border-2 p-4 text-left transition-colors ${reportType === 'subject' ? 'border-purple-500 bg-purple-50' : 'border-gray-200 hover:border-gray-300'}`}
+          className={`rounded-xl border-2 p-4 text-left transition-colors ${reportType === 'subject' ? 'border-purple-600 bg-purple-50' : 'border-gray-400 hover:border-gray-600 hover:bg-gray-50'}`}
         >
-          <FileText size={20} className={reportType === 'subject' ? 'text-purple-600' : 'text-gray-400'} />
-          <p className={`mt-2 font-semibold ${reportType === 'subject' ? 'text-purple-800' : 'text-gray-700'}`}>ใบเซ็นชื่อรายกลุ่มสาระ</p>
-          <p className="text-xs text-gray-500 mt-0.5">AWAT-03 · สำหรับครู</p>
+          <FileText size={20} className={reportType === 'subject' ? 'text-purple-600' : 'text-gray-500'} />
+          <p className={`mt-2 font-bold ${reportType === 'subject' ? 'text-purple-900' : 'text-gray-800'}`}>ใบเซ็นชื่อรายกลุ่มสาระ</p>
+          <p className="text-xs text-gray-600 mt-0.5 font-medium">AWAT-03 · สำหรับครู</p>
         </button>
       </div>
 
@@ -61,29 +61,29 @@ export function Reports() {
       <div className="flex gap-3 flex-wrap">
         {reportType === 'class' && (
           <>
-            <select className="rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500" value={selectedGrade} onChange={e => { setSelectedGrade(e.target.value); setSelectedClass(''); setShowPreview(false) }}>
+            <select className="rounded-md border-2 border-gray-400 px-3 py-2 text-sm font-medium text-gray-900 focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 bg-white" value={selectedGrade} onChange={e => { setSelectedGrade(e.target.value); setSelectedClass(''); setShowPreview(false) }}>
               <option value="">เลือกชั้น</option>
               {grades.map(g => <option key={g} value={g}>ม.{g}</option>)}
             </select>
-            <select className="rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500" value={selectedClass} onChange={e => { setSelectedClass(e.target.value); setShowPreview(false) }} disabled={!selectedGrade}>
+            <select className="rounded-md border-2 border-gray-400 px-3 py-2 text-sm font-medium text-gray-900 focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 bg-white" value={selectedClass} onChange={e => { setSelectedClass(e.target.value); setShowPreview(false) }} disabled={!selectedGrade}>
               <option value="">เลือกห้อง</option>
               {roomsForGrade.map(r => <option key={r} value={r}>ห้อง {r}</option>)}
             </select>
           </>
         )}
         {reportType === 'subject' && (
-          <select className="rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500" value={selectedSubject} onChange={e => { setSelectedSubject(e.target.value); setShowPreview(false) }}>
+          <select className="rounded-md border-2 border-gray-400 px-3 py-2 text-sm font-medium text-gray-900 focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 bg-white" value={selectedSubject} onChange={e => { setSelectedSubject(e.target.value); setShowPreview(false) }}>
             <option value="">เลือกกลุ่มสาระ</option>
             {subjectGroups.map(g => <option key={g} value={g}>{g}</option>)}
           </select>
         )}
         {canPreview && (
-          <button onClick={() => setShowPreview(true)} className="flex items-center gap-1.5 rounded-md bg-gray-700 px-4 py-2 text-sm font-medium text-white hover:bg-gray-800">
+          <button onClick={() => setShowPreview(true)} className="flex items-center gap-1.5 rounded-md bg-gray-800 border-2 border-gray-800 px-4 py-2 text-sm font-bold text-white hover:bg-gray-900">
             <FileText size={14} /> ดูตัวอย่าง
           </button>
         )}
         {showPreview && (
-          <button onClick={() => window.print()} className="flex items-center gap-1.5 rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700">
+          <button onClick={() => window.print()} className="flex items-center gap-1.5 rounded-md bg-blue-600 border-2 border-blue-600 px-4 py-2 text-sm font-bold text-white hover:bg-blue-700">
             <Printer size={14} /> พิมพ์
           </button>
         )}
@@ -91,9 +91,9 @@ export function Reports() {
 
       {/* Preview */}
       {showPreview && (
-        <div id="print-area" className="border border-gray-200 rounded-xl bg-white p-8 space-y-6 print:border-none print:p-0">
+        <div id="print-area" className="border-2 border-gray-400 rounded-xl bg-white p-8 space-y-6 print:border-none print:p-0">
           {/* Report header */}
-          <div className="text-center space-y-1 border-b pb-4">
+          <div className="text-center space-y-1 border-b-2 border-gray-300 pb-4">
             <p className="text-base font-bold">แบบบันทึกการยืมอุปกรณ์ (AWAT-03)</p>
             <p className="text-sm font-semibold">
               {reportType === 'class'

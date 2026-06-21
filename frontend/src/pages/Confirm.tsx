@@ -72,47 +72,47 @@ export function Confirm() {
 
         <div className="p-6 space-y-5">
           {/* Device info */}
-          <div className="rounded-xl bg-blue-50 p-4 space-y-2">
-            <p className="text-xs font-semibold text-blue-600 uppercase tracking-wide">ข้อมูลอุปกรณ์</p>
+          <div className="rounded-xl bg-blue-50 border-2 border-blue-300 p-4 space-y-2">
+            <p className="text-xs font-bold text-blue-700 uppercase tracking-wide">ข้อมูลอุปกรณ์</p>
             <div className="flex justify-between">
-              <span className="text-sm text-gray-600">Serial Number</span>
-              <span className="font-mono font-semibold text-gray-900">{assignment.serial_number}</span>
+              <span className="text-sm font-semibold text-gray-700">Serial Number</span>
+              <span className="font-mono font-bold text-gray-900">{assignment.serial_number}</span>
             </div>
             {assignment.mac_address && (
               <div className="flex justify-between">
-                <span className="text-sm text-gray-600">MAC Address</span>
-                <span className="font-mono text-sm text-gray-700">{assignment.mac_address}</span>
+                <span className="text-sm font-semibold text-gray-700">MAC Address</span>
+                <span className="font-mono text-sm font-semibold text-gray-800">{assignment.mac_address}</span>
               </div>
             )}
           </div>
 
           {/* Person info */}
-          <div className="rounded-xl bg-gray-50 p-4 space-y-2">
-            <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">ผู้รับอุปกรณ์ ({personType})</p>
-            <p className="font-semibold text-gray-900 text-base">{person?.name ?? '—'}</p>
+          <div className="rounded-xl bg-gray-100 border-2 border-gray-300 p-4 space-y-2">
+            <p className="text-xs font-bold text-gray-600 uppercase tracking-wide">ผู้รับอุปกรณ์ ({personType})</p>
+            <p className="font-bold text-gray-900 text-base">{person?.name ?? '—'}</p>
             {assignment.student && (
-              <p className="text-sm text-gray-600">ม.{assignment.student.grade}/{assignment.student.class_room} · รหัส {assignment.student.student_id}</p>
+              <p className="text-sm font-medium text-gray-700">ม.{assignment.student.grade}/{assignment.student.class_room} · รหัส {assignment.student.student_id}</p>
             )}
             {assignment.teacher && (
-              <p className="text-sm text-gray-600">{assignment.teacher.subject_group} · {assignment.teacher.email}</p>
+              <p className="text-sm font-medium text-gray-700">{assignment.teacher.subject_group} · {assignment.teacher.email}</p>
             )}
           </div>
 
           {/* Photo upload */}
           <div>
-            <p className="text-sm font-medium text-gray-700 mb-2">ถ่ายภาพหลักฐาน (ไม่บังคับ)</p>
+            <p className="text-sm font-bold text-gray-800 mb-2">ถ่ายภาพหลักฐาน (ไม่บังคับ)</p>
             {photo ? (
               <div className="relative">
                 <img src={photo} alt="หลักฐาน" className="w-full rounded-xl object-cover max-h-48" />
-                <button onClick={() => setPhoto(null)} className="absolute top-2 right-2 rounded-full bg-white/80 px-2 py-0.5 text-xs text-gray-700 hover:bg-white">ลบ</button>
+                <button onClick={() => setPhoto(null)} className="absolute top-2 right-2 rounded-full bg-white/90 border border-gray-300 px-2 py-0.5 text-xs font-bold text-gray-800 hover:bg-white">ลบ</button>
               </div>
             ) : (
               <button
                 onClick={() => fileRef.current?.click()}
-                className="w-full rounded-xl border-2 border-dashed border-gray-300 py-8 text-center hover:border-gray-400 transition-colors"
+                className="w-full rounded-xl border-2 border-dashed border-gray-400 py-8 text-center hover:border-blue-500 hover:bg-blue-50 transition-colors"
               >
-                <Camera size={24} className="mx-auto text-gray-400 mb-1" />
-                <p className="text-sm text-gray-500">แตะเพื่อถ่ายภาพหรือเลือกรูป</p>
+                <Camera size={24} className="mx-auto text-gray-500 mb-1" />
+                <p className="text-sm font-semibold text-gray-700">แตะเพื่อถ่ายภาพหรือเลือกรูป</p>
               </button>
             )}
             <input
@@ -133,9 +133,9 @@ export function Confirm() {
 
           {/* Delivered by */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">ชื่อผู้ส่งมอบ (กรรมการ/ครูที่ปรึกษา)</label>
+            <label className="block text-sm font-bold text-gray-800 mb-1.5">ชื่อผู้ส่งมอบ (กรรมการ/ครูที่ปรึกษา)</label>
             <input
-              className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
+              className="w-full rounded-md border-2 border-gray-400 px-3 py-2 text-sm text-gray-900 focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100"
               placeholder="ชื่อ-นามสกุลผู้ยืนยัน"
               value={deliveredBy}
               onChange={e => setDeliveredBy(e.target.value)}
