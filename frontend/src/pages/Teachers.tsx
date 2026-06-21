@@ -3,12 +3,14 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { Link } from 'react-router-dom'
 import { getTeachers, getSubjectGroups, deleteTeacher } from '../api/client'
 import { StatusBadge } from '../components/StatusBadge'
-import { Search, UserPlus, Clipboard } from 'lucide-react'
-import type { Filters } from '../types'
+import { AssignModal } from '../components/AssignModal'
+import { Search, UserPlus } from 'lucide-react'
+import type { Filters, Teacher } from '../types'
 
 export function Teachers() {
   const [filters, setFilters] = useState<Filters>({})
   const [showAdd, setShowAdd] = useState(false)
+  const [assigning, setAssigning] = useState<Teacher | null>(null)
   const qc = useQueryClient()
   const subjectGroups = getSubjectGroups()
 
@@ -29,17 +31,12 @@ export function Teachers() {
     <div className="p-6 space-y-4">
       <div className="flex items-center justify-between">
         <h2 className="text-xl font-semibold text-gray-900">รายชื่อครู</h2>
-        <div className="flex gap-2">
-          <Link to="/assign?type=teacher" className="flex items-center gap-1.5 rounded-md bg-blue-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-blue-700">
-            <Clipboard size={14} /> จับคู่เครื่อง
-          </Link>
-          <button
-            onClick={() => setShowAdd(true)}
-            className="flex items-center gap-1.5 rounded-md border border-gray-300 px-3 py-1.5 text-sm font-medium text-gray-700 hover:bg-gray-50"
-          >
-            <UserPlus size={14} /> เพิ่มครู
-          </button>
-        </div>
+        <button
+          onClick={() => setShowAdd(true)}
+          className="flex items-center gap-1.5 rounded-md border border-gray-300 px-3 py-1.5 text-sm font-medium text-gray-700 hover:bg-gray-50"
+        >
+          <UserPlus size={14} /> เพิ่มครู
+        </button>
       </div>
 
       <div className="flex flex-wrap gap-2">
@@ -102,7 +99,12 @@ export function Teachers() {
                 <td className="px-4 py-2.5">
                   <div className="flex gap-1">
                     {!t.assignment && (
-                      <Link to={`/assign?type=teacher&email=${t.email}`} className="rounded px-2 py-1 text-xs font-medium bg-blue-50 text-blue-700 hover:bg-blue-100">จับคู่</Link>
+                      <button
+                        onClick={() => setAssigning(t)}
+                        className="rounded px-2 py-1 text-xs font-medium bg-blue-50 text-blue-700 hover:bg-blue-100"
+                      >
+                        จับคู่
+                      </button>
                     )}
                     {t.assignment?.status === 'assigned' && (
                       <Link to={`/confirm/${t.assignment.id}`} className="rounded px-2 py-1 text-xs font-medium bg-green-50 text-green-700 hover:bg-green-100">ยืนยัน</Link>
@@ -125,6 +127,13 @@ export function Teachers() {
       </div>
 
       {showAdd && <AddTeacherModal onClose={() => { setShowAdd(false); qc.invalidateQueries({ queryKey: ['teachers'] }) }} />}
+      {assigning && (
+        <AssignModal
+          assigneeType="teacher"
+          person={{ id: assigning.email, name: assigning.name, subtitle: assigning.subject_group }}
+          onClose={() => setAssigning(null)}
+        />
+      )}
     </div>
   )
 }

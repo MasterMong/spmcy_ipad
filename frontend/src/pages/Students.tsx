@@ -3,11 +3,13 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { Link } from 'react-router-dom'
 import { getStudents, deleteAssignment, getClassRooms } from '../api/client'
 import { StatusBadge } from '../components/StatusBadge'
-import { Search, Upload, Clipboard } from 'lucide-react'
-import type { Filters } from '../types'
+import { AssignModal } from '../components/AssignModal'
+import { Search, Upload } from 'lucide-react'
+import type { Filters, Student } from '../types'
 
 export function Students() {
   const [filters, setFilters] = useState<Filters>({})
+  const [assigning, setAssigning] = useState<Student | null>(null)
   const qc = useQueryClient()
   const classRooms = getClassRooms()
   const grades = [...new Set(classRooms.map(c => c.grade))].sort()
@@ -33,14 +35,9 @@ export function Students() {
     <div className="p-6 space-y-4">
       <div className="flex items-center justify-between">
         <h2 className="text-xl font-semibold text-gray-900">รายชื่อนักเรียน</h2>
-        <div className="flex gap-2">
-          <Link to="/assign?type=student" className="flex items-center gap-1.5 rounded-md bg-blue-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-blue-700">
-            <Clipboard size={14} /> จับคู่เครื่อง
-          </Link>
-          <Link to="/students/import" className="flex items-center gap-1.5 rounded-md border border-gray-300 px-3 py-1.5 text-sm font-medium text-gray-700 hover:bg-gray-50">
-            <Upload size={14} /> Import CSV
-          </Link>
-        </div>
+        <Link to="/students/import" className="flex items-center gap-1.5 rounded-md border border-gray-300 px-3 py-1.5 text-sm font-medium text-gray-700 hover:bg-gray-50">
+          <Upload size={14} /> Import CSV
+        </Link>
       </div>
 
       {/* Filters */}
@@ -121,9 +118,12 @@ export function Students() {
                 <td className="px-4 py-2.5">
                   <div className="flex gap-1">
                     {!s.assignment && (
-                      <Link to={`/assign?type=student&id=${s.student_id}`} className="rounded px-2 py-1 text-xs font-medium bg-blue-50 text-blue-700 hover:bg-blue-100">
+                      <button
+                        onClick={() => setAssigning(s)}
+                        className="rounded px-2 py-1 text-xs font-medium bg-blue-50 text-blue-700 hover:bg-blue-100"
+                      >
                         จับคู่
-                      </Link>
+                      </button>
                     )}
                     {s.assignment?.status === 'assigned' && (
                       <>
@@ -148,6 +148,14 @@ export function Students() {
           </tbody>
         </table>
       </div>
+
+      {assigning && (
+        <AssignModal
+          assigneeType="student"
+          person={{ id: assigning.student_id, name: assigning.name, subtitle: `ม.${assigning.grade}/${assigning.class_room} · รหัส ${assigning.student_id}` }}
+          onClose={() => setAssigning(null)}
+        />
+      )}
     </div>
   )
 }
