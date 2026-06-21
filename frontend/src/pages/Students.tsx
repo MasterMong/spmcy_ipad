@@ -90,7 +90,7 @@ export function Students() {
       </div>
 
       <div className="text-xs font-medium text-gray-600">
-        {data ? `หน้า ${data.page}/${data.pages} · ทั้งหมด ${data.total.toLocaleString()} รายการ` : 'กำลังโหลด...'}
+        {data?.total != null ? `หน้า ${data.page}/${data.pages} · ทั้งหมด ${data.total.toLocaleString()} รายการ` : 'กำลังโหลด...'}
       </div>
 
       <div className="overflow-x-auto rounded-lg border-2 border-gray-400 bg-white">
