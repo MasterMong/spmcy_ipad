@@ -10,7 +10,7 @@ from schemas import AssignmentCreate, AssignmentOut, DeliverBody
 
 router = APIRouter(prefix="/api/assignments", tags=["assignments"])
 
-UPLOAD_DIR = "uploads"
+UPLOAD_DIR = os.getenv("UPLOAD_DIR", "uploads")
 os.makedirs(UPLOAD_DIR, exist_ok=True)
 
 

@@ -1,0 +1,33 @@
+services:
+  backend:
+    build: ./backend
+    container_name: ipad-backend
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: sqlite:////app/data/ipad.db
+      UPLOAD_DIR: /app/uploads
+      # CORS_ORIGINS: "https://your-school-domain"  # optional, behind nginx same-origin
+    volumes:
+      - ipad-db:/app/data        # SQLite database (persists across restarts)
+      - ipad-uploads:/app/uploads # delivery confirmation photos
+    expose:
+      - "8000"
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+  frontend:
+    build: ./frontend
+    container_name: ipad-frontend
+    restart: unless-stopped
+    ports:
+      - "${PORT:-8080}:80"
+    depends_on:
+      - backend
+
+volumes:
+  ipad-db:
+  ipad-uploads:
