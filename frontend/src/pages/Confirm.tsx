@@ -1,15 +1,21 @@
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import { useQuery, useMutation } from '@tanstack/react-query'
 import { getAssignment, deliverAssignment } from '../api/client'
-import { CheckCircle, Camera, Tablet } from 'lucide-react'
+import { CheckCircle, Camera, Tablet, Image, X } from 'lucide-react'
 
 export function Confirm() {
   const { assignmentId } = useParams<{ assignmentId: string }>()
   const [deliveredBy, setDeliveredBy] = useState(() => localStorage.getItem('assignedBy') ?? '')
   const [photo, setPhoto] = useState<string | null>(null)
   const [done, setDone] = useState(false)
+  const [cameraOpen, setCameraOpen] = useState(false)
+  const [cameraError, setCameraError] = useState('')
+
   const fileRef = useRef<HTMLInputElement>(null)
+  const videoRef = useRef<HTMLVideoElement>(null)
+  const canvasRef = useRef<HTMLCanvasElement>(null)
+  const streamRef = useRef<MediaStream | null>(null)
 
   const { data: assignment, isLoading, isError } = useQuery({
     queryKey: ['assignment', assignmentId],
@@ -21,6 +27,43 @@ export function Confirm() {
     mutationFn: () => deliverAssignment(assignmentId!, deliveredBy.trim()),
     onSuccess: () => setDone(true),
   })
+
+  async function openCamera() {
+    setCameraError('')
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' }, audio: false })
+      streamRef.current = stream
+      setCameraOpen(true)
+    } catch {
+      setCameraError('ไม่สามารถเข้าถึงกล้องได้ — กรุณาอนุญาตการใช้งานกล้อง')
+    }
+  }
+
+  useEffect(() => {
+    if (cameraOpen && videoRef.current && streamRef.current) {
+      videoRef.current.srcObject = streamRef.current
+    }
+  }, [cameraOpen])
+
+  function stopCamera() {
+    streamRef.current?.getTracks().forEach(t => t.stop())
+    streamRef.current = null
+    setCameraOpen(false)
+  }
+
+  function capturePhoto() {
+    const video = videoRef.current
+    const canvas = canvasRef.current
+    if (!video || !canvas) return
+    canvas.width = video.videoWidth
+    canvas.height = video.videoHeight
+    canvas.getContext('2d')!.drawImage(video, 0, 0)
+    setPhoto(canvas.toDataURL('image/jpeg', 0.85))
+    stopCamera()
+  }
+
+  // Stop stream if component unmounts
+  useEffect(() => () => { streamRef.current?.getTracks().forEach(t => t.stop()) }, [])
 
   if (isLoading) {
     return <div className="flex items-center justify-center min-h-screen text-gray-400">กำลังโหลด...</div>
@@ -107,28 +150,73 @@ export function Confirm() {
             )}
           </div>
 
-          {/* Photo upload */}
+          {/* Photo — required */}
           <div>
-            <p className="text-sm font-bold text-gray-800 mb-2">ถ่ายภาพหลักฐาน (ไม่บังคับ)</p>
-            {photo ? (
-              <div className="relative">
-                <img src={photo} alt="หลักฐาน" className="w-full rounded-xl object-cover max-h-48" />
-                <button onClick={() => setPhoto(null)} className="absolute top-2 right-2 rounded-full bg-white/90 border border-gray-300 px-2 py-0.5 text-xs font-bold text-gray-800 hover:bg-white">ลบ</button>
+            <p className="text-sm font-bold text-gray-800 mb-2">
+              ถ่ายภาพหลักฐาน <span className="text-red-500">*</span>
+            </p>
+
+            {/* Live camera view */}
+            {cameraOpen && (
+              <div className="relative rounded-xl overflow-hidden bg-black mb-2">
+                <video ref={videoRef} autoPlay playsInline className="w-full max-h-64 object-cover" />
+                <div className="absolute bottom-3 left-0 right-0 flex justify-center gap-3">
+                  <button
+                    onClick={capturePhoto}
+                    className="rounded-full bg-white px-5 py-2 text-sm font-bold text-gray-900 shadow hover:bg-gray-100"
+                  >
+                    ถ่าย
+                  </button>
+                  <button
+                    onClick={stopCamera}
+                    className="rounded-full bg-gray-800/70 px-4 py-2 text-sm font-bold text-white hover:bg-gray-800"
+                  >
+                    <X size={14} />
+                  </button>
+                </div>
               </div>
-            ) : (
-              <button
-                onClick={() => fileRef.current?.click()}
-                className="w-full rounded-xl border-2 border-dashed border-gray-400 py-8 text-center hover:border-blue-500 hover:bg-blue-50 transition-colors"
-              >
-                <Camera size={24} className="mx-auto text-gray-500 mb-1" />
-                <p className="text-sm font-semibold text-gray-700">แตะเพื่อถ่ายภาพหรือเลือกรูป</p>
-              </button>
             )}
+
+            {/* Photo preview */}
+            {photo && !cameraOpen && (
+              <div className="relative mb-2">
+                <img src={photo} alt="หลักฐาน" className="w-full rounded-xl object-cover max-h-48" />
+                <button
+                  onClick={() => setPhoto(null)}
+                  className="absolute top-2 right-2 rounded-full bg-white/90 border border-gray-300 px-2 py-0.5 text-xs font-bold text-gray-800 hover:bg-white"
+                >
+                  ลบ
+                </button>
+              </div>
+            )}
+
+            {/* Buttons */}
+            {!photo && !cameraOpen && (
+              <div className="flex gap-2">
+                <button
+                  onClick={openCamera}
+                  className="flex-1 flex flex-col items-center justify-center gap-1 rounded-xl border-2 border-dashed border-blue-400 py-5 text-center hover:border-blue-600 hover:bg-blue-50 transition-colors"
+                >
+                  <Camera size={22} className="text-blue-600" />
+                  <span className="text-xs font-bold text-blue-700">ถ่ายจากกล้อง</span>
+                </button>
+                <button
+                  onClick={() => fileRef.current?.click()}
+                  className="flex-1 flex flex-col items-center justify-center gap-1 rounded-xl border-2 border-dashed border-gray-400 py-5 text-center hover:border-gray-600 hover:bg-gray-50 transition-colors"
+                >
+                  <Image size={22} className="text-gray-500" />
+                  <span className="text-xs font-bold text-gray-700">เลือกจากแกลเลอรี่</span>
+                </button>
+              </div>
+            )}
+
+            {cameraError && <p className="text-xs text-red-600 font-semibold mt-1">{cameraError}</p>}
+
+            <canvas ref={canvasRef} className="hidden" />
             <input
               ref={fileRef}
               type="file"
               accept="image/*"
-              capture="environment"
               className="hidden"
               onChange={e => {
                 const f = e.target.files?.[0]
@@ -153,7 +241,7 @@ export function Confirm() {
 
           <button
             onClick={() => mutation.mutate()}
-            disabled={!deliveredBy.trim() || mutation.isPending}
+            disabled={!deliveredBy.trim() || !photo || mutation.isPending}
             className="w-full inline-flex items-center justify-center gap-2 rounded-xl bg-green-600 py-3 text-base font-bold text-white hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <CheckCircle size={18} />
