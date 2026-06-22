@@ -99,9 +99,12 @@ export function Teachers() {
                       </button>
                     )}
                     {t.assignment?.status === 'assigned' && (
-                      <Link to={`/confirm/${t.assignment.id}`} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 rounded px-2.5 py-1 text-xs font-bold bg-green-600 text-white hover:bg-green-700 border border-green-700">
+                      <button
+                        onClick={() => window.open(`/confirm/${t.assignment!.id}`, '_blank')}
+                        className="inline-flex items-center gap-1 rounded px-2.5 py-1 text-xs font-bold bg-green-600 text-white hover:bg-green-700 border border-green-700"
+                      >
                         <CheckCircle size={11} /> ยืนยัน
-                      </Link>
+                      </button>
                     )}
                     {t.assignment?.status === 'delivered' && (
                       <span className="text-xs font-medium text-gray-600">ส่งมอบแล้ว</span>

@@ -135,14 +135,12 @@ export function Students() {
                     )}
                     {s.assignment?.status === 'assigned' && (
                       <>
-                        <Link
-                          to={`/confirm/${s.assignment.id}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
+                        <button
+                          onClick={() => window.open(`/confirm/${s.assignment!.id}`, '_blank')}
                           className="inline-flex items-center gap-1 rounded px-2.5 py-1 text-xs font-bold bg-green-600 text-white hover:bg-green-700 border border-green-700"
                         >
                           <CheckCircle size={11} /> ยืนยัน
-                        </Link>
+                        </button>
                         <button
                           onClick={() => { if (confirm('ยกเลิกการจับคู่?')) removeMutation.mutate(s.assignment!.id) }}
                           className="inline-flex items-center gap-1 rounded px-2.5 py-1 text-xs font-bold bg-white text-red-700 hover:bg-red-50 border-2 border-red-400"
