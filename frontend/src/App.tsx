@@ -9,6 +9,7 @@ import { Teachers } from './pages/Teachers'
 import { Confirm } from './pages/Confirm'
 import { StudentUpload } from './pages/StudentUpload'
 import { Reports } from './pages/Reports'
+import { HowTo } from './pages/HowTo'
 
 const qc = new QueryClient({ defaultOptions: { queries: { staleTime: 3000 } } })
 
@@ -25,6 +26,7 @@ export default function App() {
           <Route element={<Layout />}>
             <Route path="/" element={<Dashboard />} />
             <Route path="/reports" element={<Reports />} />
+            <Route path="/how-to" element={<HowTo />} />
 
             {/* Password-protected (requires VITE_ADMIN_PASSWORD) */}
             <Route element={<ProtectedRoute />}>
