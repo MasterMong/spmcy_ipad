@@ -27,11 +27,11 @@ def import_students_json(rows: List[StudentBase], db: Session = Depends(get_db))
         if db.get(Student, row.student_id):
             continue
         try:
-            db.add(Student(**row.model_dump()))
-            db.flush()
+            with db.begin_nested():
+                db.add(Student(**row.model_dump()))
             count += 1
         except IntegrityError:
-            db.rollback()
+            pass
     db.commit()
     return {"imported": count}
 
