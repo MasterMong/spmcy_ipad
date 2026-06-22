@@ -197,7 +197,20 @@ export function HowTo() {
               <div>
                 <h3 className="text-sm font-bold text-gray-800 mb-3">ขั้นตอนสำหรับนักเรียน</h3>
                 <ol className="space-y-3">
-                  <Step number={1} text="เปิด URL: http://[ที่อยู่เซิร์ฟเวอร์]/student-upload" />
+                  <li className="flex items-start gap-3">
+                    <span className="shrink-0 w-6 h-6 rounded-full bg-blue-600 text-white text-xs font-bold flex items-center justify-center mt-0.5">1</span>
+                    <span className="text-sm text-gray-700 leading-relaxed">
+                      เปิด URL:{' '}
+                      <a
+                        href={`${window.location.origin}/student-upload`}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="font-mono text-blue-600 hover:underline break-all"
+                      >
+                        {window.location.origin}/student-upload
+                      </a>
+                    </span>
+                  </li>
                   <Step number={2} text="กรอกรหัสนักเรียน (Student ID)" />
                   <Step number={3} text="กรอกเลขประจำตัวประชาชน 13 หลัก" />
                   <Step number={4} text="กด 'เข้าสู่ระบบ' — ระบบจะแสดงข้อมูลของนักเรียน" />
@@ -207,7 +220,15 @@ export function HowTo() {
               </div>
               <div className="rounded-xl bg-blue-50 border border-blue-200 px-4 py-3">
                 <p className="text-xs font-bold text-blue-800">สำหรับผู้ดูแลระบบ</p>
-                <p className="text-xs text-blue-700 mt-0.5">แชร์ลิงก์หน้านี้ให้นักเรียนทาง Line, QR Code หรือ Google Classroom</p>
+                <p className="text-xs text-blue-700 mt-1">แชร์ลิงก์นี้ให้นักเรียนทาง Line, QR Code หรือ Google Classroom</p>
+                <a
+                  href={`${window.location.origin}/student-upload`}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="text-xs font-mono text-blue-600 hover:underline break-all mt-0.5 block"
+                >
+                  {window.location.origin}/student-upload
+                </a>
               </div>
             </div>
             <div className="space-y-3">
