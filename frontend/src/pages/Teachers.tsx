@@ -20,6 +20,7 @@ export function Teachers() {
   const { data: teachers = [], isLoading } = useQuery({
     queryKey: ['teachers', filters],
     queryFn: () => getTeachers(filters),
+    refetchInterval: 5000,
   })
 
   const deleteMutation = useMutation({

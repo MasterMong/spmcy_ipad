@@ -20,6 +20,7 @@ export function Students() {
   const { data, isLoading } = useQuery({
     queryKey: ['students', filters, page],
     queryFn: () => getStudents(filters, page),
+    refetchInterval: 5000,
   })
   const students = data?.items ?? []
 
