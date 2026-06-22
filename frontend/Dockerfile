@@ -9,6 +9,8 @@ COPY . .
 
 # Production build uses the real backend (same-origin /api via nginx)
 ENV VITE_USE_MOCK=false
+ARG VITE_ADMIN_PASSWORD
+ENV VITE_ADMIN_PASSWORD=$VITE_ADMIN_PASSWORD
 RUN npm run build
 
 # ─── Serve stage ──────────────────────────────────────────────────────────────

@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { Layout } from './components/Layout'
+import { ProtectedRoute } from './components/ProtectedRoute'
 import { Dashboard } from './pages/Dashboard'
 import { Students } from './pages/Students'
 import { ImportStudents } from './pages/ImportStudents'
@@ -21,10 +22,14 @@ export default function App() {
           {/* Main app */}
           <Route element={<Layout />}>
             <Route path="/" element={<Dashboard />} />
-            <Route path="/students" element={<Students />} />
-            <Route path="/students/import" element={<ImportStudents />} />
-            <Route path="/teachers" element={<Teachers />} />
             <Route path="/reports" element={<Reports />} />
+
+            {/* Password-protected (requires VITE_ADMIN_PASSWORD) */}
+            <Route element={<ProtectedRoute />}>
+              <Route path="/students" element={<Students />} />
+              <Route path="/students/import" element={<ImportStudents />} />
+              <Route path="/teachers" element={<Teachers />} />
+            </Route>
           </Route>
         </Routes>
       </BrowserRouter>

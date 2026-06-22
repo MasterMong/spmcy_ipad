@@ -21,7 +21,10 @@ services:
       start_period: 10s
 
   frontend:
-    build: ./frontend
+    build:
+      context: ./frontend
+      args:
+        VITE_ADMIN_PASSWORD: ${VITE_ADMIN_PASSWORD:-}
     container_name: ipad-frontend
     restart: unless-stopped
     ports:
