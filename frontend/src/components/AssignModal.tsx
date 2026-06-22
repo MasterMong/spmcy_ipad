@@ -103,7 +103,7 @@ export function AssignModal({ person, assigneeType, onClose }: Props) {
 
         {/* Assigned by */}
         <div>
-          <label className="block text-sm font-bold text-gray-800 mb-1.5">ชื่อผู้ดำเนินการ</label>
+          <label className="block text-sm font-bold text-gray-800 mb-1.5">ครูที่ปรึกษา</label>
           <input
             className="w-full rounded-md border-2 border-gray-400 px-3 py-2 text-sm text-gray-900 focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 placeholder:text-gray-400"
             placeholder="ชื่อกรรมการ / ครูที่ปรึกษา"

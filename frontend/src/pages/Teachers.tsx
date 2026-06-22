@@ -99,7 +99,7 @@ export function Teachers() {
                       </button>
                     )}
                     {t.assignment?.status === 'assigned' && (
-                      <Link to={`/confirm/${t.assignment.id}`} className="inline-flex items-center gap-1 rounded px-2.5 py-1 text-xs font-bold bg-green-600 text-white hover:bg-green-700 border border-green-700">
+                      <Link to={`/confirm/${t.assignment.id}`} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 rounded px-2.5 py-1 text-xs font-bold bg-green-600 text-white hover:bg-green-700 border border-green-700">
                         <CheckCircle size={11} /> ยืนยัน
                       </Link>
                     )}
