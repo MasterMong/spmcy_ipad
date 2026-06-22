@@ -8,8 +8,9 @@ services:
       UPLOAD_DIR: /app/uploads
       # CORS_ORIGINS: "https://your-school-domain"  # optional, behind nginx same-origin
     volumes:
-      - ipad-db:/app/data        # SQLite database (persists across restarts)
-      - ipad-uploads:/app/uploads # delivery confirmation photos
+      # Bind mounts: data lives in plain local folders for easy backup/transfer.
+      - ./data:/app/data          # -> ./data/ipad.db
+      - ./uploads:/app/uploads    # -> delivery confirmation photos
     expose:
       - "8000"
     healthcheck:
@@ -27,7 +28,3 @@ services:
       - "${PORT:-8080}:80"
     depends_on:
       - backend
-
-volumes:
-  ipad-db:
-  ipad-uploads:
