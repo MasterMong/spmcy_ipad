@@ -52,6 +52,12 @@ export function Confirm() {
           <p className="text-sm font-bold text-yellow-800">ขอบคุณ — สามารถปิดแท็บนี้ได้เลย</p>
           <p className="text-xs text-yellow-700 mt-0.5">หน้านี้ไม่จำเป็นต้องเปิดทิ้งไว้</p>
         </div>
+        <button
+          onClick={() => window.close()}
+          className="rounded-xl bg-gray-800 px-6 py-2.5 text-sm font-bold text-white hover:bg-gray-900"
+        >
+          ปิดแท็บนี้
+        </button>
       </div>
     )
   }
