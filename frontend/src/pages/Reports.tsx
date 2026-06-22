@@ -114,8 +114,7 @@ export function Reports() {
                   <th className="border border-gray-400 px-3 py-2 text-left">รหัสนักเรียน</th>
                   <th className="border border-gray-400 px-3 py-2 text-left">ชื่อ-นามสกุล</th>
                   <th className="border border-gray-400 px-3 py-2 text-center">Serial Number</th>
-                  <th className="border border-gray-400 px-3 py-2 text-center w-32">ลายมือชื่อนักเรียน</th>
-                  <th className="border border-gray-400 px-3 py-2 text-center w-32">ลายมือชื่อครูที่ปรึกษา</th>
+                  <th className="border border-gray-400 px-3 py-2 text-center w-40">ลายมือชื่อนักเรียน</th>
                 </tr>
               </thead>
               <tbody>
@@ -126,11 +125,10 @@ export function Reports() {
                     <td className="border border-gray-300 px-3 py-3">{s.name}</td>
                     <td className="border border-gray-300 px-3 py-3 text-center font-mono text-xs">{s.assignment?.serial_number ?? '—'}</td>
                     <td className="border border-gray-300 px-3 py-3 h-10" />
-                    <td className="border border-gray-300 px-3 py-3 h-10" />
                   </tr>
                 ))}
                 {students.length === 0 && (
-                  <tr><td colSpan={6} className="border border-gray-300 px-3 py-4 text-center text-gray-400">ไม่พบข้อมูลนักเรียนในห้องนี้</td></tr>
+                  <tr><td colSpan={5} className="border border-gray-300 px-3 py-4 text-center text-gray-400">ไม่พบข้อมูลนักเรียนในห้องนี้</td></tr>
                 )}
               </tbody>
             </table>
@@ -162,6 +160,16 @@ export function Reports() {
                 )}
               </tbody>
             </table>
+          )}
+
+          {reportType === 'class' && (
+            <div className="mt-10 flex justify-end">
+              <div className="text-center text-sm leading-loose">
+                <p>ลงชื่อ ............................................ ครูที่ปรึกษา</p>
+                <p className="mt-2">( ...................................................... )</p>
+                <p className="mt-3">วันที่ ......... เดือน .................. พ.ศ. ............</p>
+              </div>
+            </div>
           )}
 
           <div className="text-xs text-gray-400 text-center pt-2">
