@@ -6,7 +6,7 @@ import { CheckCircle, Camera, Tablet } from 'lucide-react'
 
 export function Confirm() {
   const { assignmentId } = useParams<{ assignmentId: string }>()
-  const [deliveredBy, setDeliveredBy] = useState('')
+  const [deliveredBy, setDeliveredBy] = useState(() => localStorage.getItem('assignedBy') ?? '')
   const [photo, setPhoto] = useState<string | null>(null)
   const [done, setDone] = useState(false)
   const fileRef = useRef<HTMLInputElement>(null)
@@ -147,7 +147,7 @@ export function Confirm() {
               className="w-full rounded-md border-2 border-gray-400 px-3 py-2 text-sm text-gray-900 focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100"
               placeholder="ชื่อ-นามสกุลผู้ยืนยัน"
               value={deliveredBy}
-              onChange={e => setDeliveredBy(e.target.value)}
+              onChange={e => { setDeliveredBy(e.target.value); localStorage.setItem('assignedBy', e.target.value) }}
             />
           </div>
 
