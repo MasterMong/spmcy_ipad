@@ -215,6 +215,43 @@ export async function getSubjectGroups(): Promise<string[]> {
   return [...new Set(mockTeachers.map(t => t.subject_group))].sort()
 }
 
+// ─── Student portal ───────────────────────────────────────────────────────────
+export interface StudentVerifyResult {
+  student: { student_id: string; name: string; grade: number; class_room: string }
+  assignment: { id: string; serial_number: string; status: string; assigned_at: string } | null
+}
+
+export async function verifyStudent(studentId: string, nationalId: string): Promise<StudentVerifyResult> {
+  return apiFetch('/student-portal/verify', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ student_id: studentId, national_id: nationalId }),
+  })
+}
+
+function dataURLtoBlob(dataUrl: string): Blob {
+  const [header, data] = dataUrl.split(',')
+  const mime = header.match(/:(.*?);/)![1]
+  const binary = atob(data)
+  const array = new Uint8Array(binary.length)
+  for (let i = 0; i < binary.length; i++) array[i] = binary.charCodeAt(i)
+  return new Blob([array], { type: mime })
+}
+
+export async function studentUploadPhotos(
+  studentId: string,
+  nationalId: string,
+  assignmentId: string,
+  photos: string[],
+): Promise<{ uploaded: number }> {
+  const fd = new FormData()
+  photos.forEach((dataUrl, i) => fd.append('files', dataURLtoBlob(dataUrl), `photo_${i + 1}.jpg`))
+  const params = new URLSearchParams({ student_id: studentId, national_id: nationalId, assignment_id: assignmentId })
+  const r = await fetch(`${BASE}/student-portal/upload-photos?${params}`, { method: 'POST', body: fd })
+  if (!r.ok) throw new Error(`HTTP ${r.status}`)
+  return r.json()
+}
+
 export async function getClassRooms(): Promise<{ grade: number; class_room: string }[]> {
   if (!USE_MOCK) return apiFetch('/students/classrooms')
   const seen = new Set<string>()

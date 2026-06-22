@@ -4,7 +4,7 @@ from fastapi.staticfiles import StaticFiles
 import os
 
 from database import engine, Base
-from routers import students, teachers, assignments, dashboard, reports
+from routers import students, teachers, assignments, dashboard, reports, student_portal
 
 Base.metadata.create_all(bind=engine)
 
@@ -27,6 +27,7 @@ app.include_router(teachers.router)
 app.include_router(assignments.router)
 app.include_router(dashboard.router)
 app.include_router(reports.router)
+app.include_router(student_portal.router)
 
 _upload_dir = os.getenv("UPLOAD_DIR", "uploads")
 os.makedirs(_upload_dir, exist_ok=True)
