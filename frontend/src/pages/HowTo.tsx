@@ -1,17 +1,15 @@
-import { BookOpen, LayoutDashboard, GraduationCap, Users, CheckCircle, Camera, FileText, Upload, Smartphone } from 'lucide-react'
+import { BookOpen, LayoutDashboard, GraduationCap, Users, CheckCircle, FileText, Upload, Smartphone } from 'lucide-react'
 
-interface PlaceholderProps {
-  label: string
-  hint?: string
+interface ScreenshotProps {
+  src: string
+  alt: string
   tall?: boolean
 }
 
-function ScreenshotPlaceholder({ label, hint, tall }: PlaceholderProps) {
+function Screenshot({ src, alt }: ScreenshotProps) {
   return (
-    <div className={`w-full rounded-xl border-2 border-dashed border-gray-300 bg-gray-50 flex flex-col items-center justify-center gap-2 text-center px-4 ${tall ? 'min-h-64' : 'min-h-40'}`}>
-      <Camera size={24} className="text-gray-300" />
-      <p className="text-sm font-bold text-gray-400">{label}</p>
-      {hint && <p className="text-xs text-gray-400">{hint}</p>}
+    <div className="w-full rounded-xl overflow-hidden border-2 border-gray-200 shadow-sm bg-gray-50">
+      <img src={src} alt={alt} className="w-full object-cover object-top" />
     </div>
   )
 }
@@ -76,15 +74,13 @@ export function HowTo() {
         description="ภาพรวมสถิติการแจก iPad ทั้งหมด"
       >
         <div className="grid md:grid-cols-2 gap-6">
-          <div className="space-y-4">
-            <ol className="space-y-3">
-              <Step number={1} text="เปิดระบบ จะเข้าสู่หน้า Dashboard โดยอัตโนมัติ" />
-              <Step number={2} text="ดูจำนวนนักเรียนและครูทั้งหมดที่แสดงในการ์ดสถิติ" />
-              <Step number={3} text="ตรวจสอบยอดจับคู่แล้ว / ส่งมอบแล้ว / รอดำเนินการ" />
-              <Step number={4} text="ข้อมูลอัปเดตอัตโนมัติทุกครั้งที่มีการเปลี่ยนแปลง" />
-            </ol>
-          </div>
-          <ScreenshotPlaceholder label="ภาพหน้า Dashboard" hint="วางภาพหน้าจอ Dashboard ที่นี่" tall />
+          <ol className="space-y-3">
+            <Step number={1} text="เปิดระบบ จะเข้าสู่หน้า Dashboard โดยอัตโนมัติ" />
+            <Step number={2} text="ดูจำนวนนักเรียนและครูทั้งหมดที่แสดงในการ์ดสถิติ" />
+            <Step number={3} text="ตรวจสอบยอดจับคู่แล้ว / ส่งมอบแล้ว / รอดำเนินการ" />
+            <Step number={4} text="ข้อมูลอัปเดตอัตโนมัติทุกครั้งที่มีการเปลี่ยนแปลง" />
+          </ol>
+          <Screenshot src="/howto/dashboard.png" alt="หน้า Dashboard" />
         </div>
       </Section>
 
@@ -95,16 +91,16 @@ export function HowTo() {
         description="จัดการการจับคู่ iPad ให้นักเรียน"
       >
         <div className="space-y-6">
-          {/* Filter */}
+          {/* List */}
           <div>
-            <h3 className="text-sm font-bold text-gray-800 mb-3">การค้นหาและกรองข้อมูล</h3>
+            <h3 className="text-sm font-bold text-gray-800 mb-3">รายชื่อนักเรียนและการค้นหา</h3>
             <div className="grid md:grid-cols-2 gap-4">
               <ol className="space-y-3">
                 <Step number={1} text="พิมพ์ชื่อหรือรหัสนักเรียนในช่องค้นหา" />
                 <Step number={2} text="กรองตามชั้น / ห้อง / สถานะ โดยใช้ dropdown" />
                 <Step number={3} text="กด 'ล้างตัวกรอง' เพื่อแสดงทั้งหมด" />
               </ol>
-              <ScreenshotPlaceholder label="แถบค้นหาและกรอง" hint="วางภาพแถบ filter ที่นี่" />
+              <Screenshot src="/howto/students-list.png" alt="รายชื่อนักเรียน" />
             </div>
           </div>
 
@@ -117,19 +113,7 @@ export function HowTo() {
                 <Step number={3} text="กรอกชื่อครูที่ปรึกษาในช่อง 'ครูที่ปรึกษา'" />
                 <Step number={4} text="กด 'บันทึก' เพื่อยืนยันการจับคู่" />
               </ol>
-              <ScreenshotPlaceholder label="หน้าต่างจับคู่ iPad" hint="วางภาพ popup จับคู่ที่นี่" />
-            </div>
-          </div>
-
-          <div className="border-t border-gray-100 pt-5">
-            <h3 className="text-sm font-bold text-gray-800 mb-3">การยืนยันส่งมอบ (ปุ่ม ยืนยัน)</h3>
-            <div className="grid md:grid-cols-2 gap-4">
-              <ol className="space-y-3">
-                <Step number={1} text="หลังจับคู่แล้ว สถานะจะเปลี่ยนเป็น 'จับคู่แล้ว' และปุ่มสีเขียว 'ยืนยัน' จะปรากฏ" />
-                <Step number={2} text="กดปุ่ม 'ยืนยัน' เพื่อเปิดหน้ายืนยันในแท็บใหม่" />
-                <Step number={3} text="ดำเนินการยืนยันในหน้าที่เปิดขึ้นมา (ดูหัวข้อ 'หน้ายืนยันรับ iPad')" />
-              </ol>
-              <ScreenshotPlaceholder label="ปุ่มสถานะในตารางนักเรียน" hint="วางภาพแถวนักเรียนพร้อมปุ่มที่นี่" />
+              <Screenshot src="/howto/students-assign-modal.png" alt="หน้าต่างจับคู่ iPad" />
             </div>
           </div>
         </div>
@@ -142,16 +126,14 @@ export function HowTo() {
         description="จัดการการจับคู่ iPad ให้ครู"
       >
         <div className="grid md:grid-cols-2 gap-6">
-          <div className="space-y-4">
-            <ol className="space-y-3">
-              <Step number={1} text="กด 'เพิ่มครู' เพื่อเพิ่มรายชื่อครูใหม่ (ชื่อ, อีเมล, กลุ่มสาระ)" />
-              <Step number={2} text="กรองครูตามกลุ่มสาระหรือสถานะได้จาก dropdown" />
-              <Step number={3} text="กด 'จับคู่' และกรอก Serial Number เพื่อมอบ iPad ให้ครู" />
-              <Step number={4} text="กด 'ยืนยัน' เพื่อเปิดหน้ายืนยันส่งมอบ (เหมือนหน้านักเรียน)" />
-              <Step number={5} text="กดปุ่ม 'ลบ' เพื่อลบรายชื่อครูออกจากระบบ" />
-            </ol>
-          </div>
-          <ScreenshotPlaceholder label="หน้าครู" hint="วางภาพหน้าจอหน้าครูที่นี่" tall />
+          <ol className="space-y-3">
+            <Step number={1} text="กด 'เพิ่มครู' เพื่อเพิ่มรายชื่อครูใหม่ (ชื่อ, อีเมล, กลุ่มสาระ)" />
+            <Step number={2} text="กรองครูตามกลุ่มสาระหรือสถานะได้จาก dropdown" />
+            <Step number={3} text="กด 'จับคู่' และกรอก Serial Number เพื่อมอบ iPad ให้ครู" />
+            <Step number={4} text="กด 'ยืนยัน' เพื่อเปิดหน้ายืนยันส่งมอบ" />
+            <Step number={5} text="กดปุ่ม 'ลบ' เพื่อลบรายชื่อครูออกจากระบบ" />
+          </ol>
+          <Screenshot src="/howto/teachers.png" alt="หน้าครู" />
         </div>
       </Section>
 
@@ -173,8 +155,8 @@ export function HowTo() {
               <Step number={6} text="หลังยืนยันสำเร็จ กด 'ปิดแท็บนี้' เพื่อปิดหน้า" />
             </ol>
             <div className="space-y-3">
-              <ScreenshotPlaceholder label="หน้าฟอร์มยืนยัน" hint="วางภาพฟอร์มก่อนยืนยันที่นี่" />
-              <ScreenshotPlaceholder label="หน้าสำเร็จหลังยืนยัน" hint="วางภาพหน้า success ที่นี่" />
+              <Screenshot src="/howto/confirm-form.png" alt="ฟอร์มยืนยันรับ iPad" />
+              <Screenshot src="/howto/confirm-success.png" alt="หน้าสำเร็จหลังยืนยัน" />
             </div>
           </div>
           <div className="rounded-xl bg-yellow-50 border border-yellow-200 px-4 py-3">
@@ -232,8 +214,8 @@ export function HowTo() {
               </div>
             </div>
             <div className="space-y-3">
-              <ScreenshotPlaceholder label="หน้าล็อกอินนักเรียน" hint="วางภาพหน้าล็อกอินที่นี่" />
-              <ScreenshotPlaceholder label="หน้าอัปโหลดภาพ" hint="วางภาพหน้าอัปโหลดที่นี่" />
+              <Screenshot src="/howto/student-upload-login.png" alt="หน้าล็อกอินนักเรียน" />
+              <Screenshot src="/howto/student-upload-form.png" alt="หน้าอัปโหลดภาพ" />
             </div>
           </div>
         </div>
@@ -262,7 +244,7 @@ export function HowTo() {
               <code className="text-xs text-gray-500 font-mono block mt-0.5">12345, นายทดสอบ ระบบ, 1234567890123, 4, 1</code>
             </div>
           </div>
-          <ScreenshotPlaceholder label="หน้า Import CSV" hint="วางภาพหน้า import ที่นี่" tall />
+          <Screenshot src="/howto/import-csv.png" alt="หน้า Import CSV" />
         </div>
       </Section>
 
@@ -275,15 +257,15 @@ export function HowTo() {
         <div className="grid md:grid-cols-2 gap-6">
           <ol className="space-y-3">
             <Step number={1} text="เข้าเมนู 'รายงาน' จากแถบด้านซ้าย" />
-            <Step number={2} text="ดูตารางสรุปการแจกแยกตามชั้น/ห้อง" />
-            <Step number={3} text="กรองข้อมูลตามสถานะหรือประเภทผู้รับ" />
-            <Step number={4} text="กด 'Export' เพื่อดาวน์โหลดข้อมูลเป็น CSV" />
+            <Step number={2} text="เลือกประเภทใบเซ็นชื่อ: รายห้อง (นักเรียน) หรือ รายกลุ่มสาระ (ครู)" />
+            <Step number={3} text="เลือกชั้น / ห้อง จาก dropdown เพื่อกรองข้อมูล" />
+            <Step number={4} text="กด 'พิมพ์' เพื่อเปิดหน้าพิมพ์ใบเซ็นชื่อ" />
           </ol>
-          <ScreenshotPlaceholder label="หน้ารายงาน" hint="วางภาพหน้าจอรายงานที่นี่" tall />
+          <Screenshot src="/howto/reports.png" alt="หน้ารายงาน" />
         </div>
       </Section>
 
-      {/* ── Footer note ──────────────────────────────────────────────────────── */}
+      {/* ── Footer ───────────────────────────────────────────────────────────── */}
       <div className="rounded-xl bg-gray-100 border border-gray-200 px-5 py-4 text-center">
         <p className="text-xs text-gray-500">หากมีปัญหาการใช้งาน กรุณาติดต่อผู้ดูแลระบบ</p>
         <p className="text-xs text-gray-400 mt-0.5">ระบบแจก iPad · โรงเรียนภูเขียว</p>
