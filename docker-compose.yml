@@ -4,13 +4,13 @@ services:
     container_name: ipad-backend
     restart: unless-stopped
     environment:
-      DATABASE_URL: sqlite:////app/data/ipad.db
-      UPLOAD_DIR: /app/uploads
-      # CORS_ORIGINS: "https://your-school-domain"  # optional, behind nginx same-origin
+      DATABASE_URL: ${DATABASE_URL:-sqlite:////app/data/ipad.db}
+      UPLOAD_DIR: ${UPLOAD_DIR:-/app/uploads}
+      CORS_ORIGINS: ${CORS_ORIGINS:-}
     volumes:
       # Bind mounts: data lives in plain local folders for easy backup/transfer.
-      - ./data:/app/data          # -> ./data/ipad.db
-      - ./uploads:/app/uploads    # -> delivery confirmation photos
+      - ${DATA_DIR:-./data}:/app/data      # -> ./data/ipad.db
+      - ${UPLOADS_DIR:-./uploads}:/app/uploads  # -> delivery confirmation photos
     expose:
       - "8000"
     healthcheck:
