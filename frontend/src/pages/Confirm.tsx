@@ -91,6 +91,11 @@ export function Confirm() {
             <p className="text-xs text-gray-400">{new Date(assignment.delivered_at).toLocaleString('th-TH')}</p>
           )}
         </div>
+        {photo && (
+          <div className="w-full max-w-sm rounded-xl overflow-hidden border-2 border-gray-200">
+            <img src={photo} alt="หลักฐานการรับ" className="w-full object-cover" />
+          </div>
+        )}
         <div className="bg-yellow-50 border-2 border-yellow-300 rounded-xl px-5 py-3 text-center w-full max-w-sm">
           <p className="text-sm font-bold text-yellow-800">ขอบคุณ — สามารถปิดแท็บนี้ได้เลย</p>
           <p className="text-xs text-yellow-700 mt-0.5">หน้านี้ไม่จำเป็นต้องเปิดทิ้งไว้</p>
