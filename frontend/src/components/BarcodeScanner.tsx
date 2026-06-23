@@ -1,6 +1,13 @@
 import { useEffect, useRef, useState } from 'react'
 import { BrowserMultiFormatReader } from '@zxing/browser'
+import { BarcodeFormat, DecodeHintType } from '@zxing/library'
 import { FlipHorizontal, X } from 'lucide-react'
+
+// Only decode Code 128 / Code 39 — these are the formats Apple uses for serial
+// number barcodes. This excludes UPC / EAN-13 retail barcodes that appear nearby.
+const SERIAL_HINTS = new Map<DecodeHintType, BarcodeFormat[]>([
+  [DecodeHintType.POSSIBLE_FORMATS, [BarcodeFormat.CODE_128, BarcodeFormat.CODE_39, BarcodeFormat.CODE_93]],
+])
 
 interface Props {
   onScan: (value: string) => void
@@ -38,7 +45,7 @@ export function BarcodeScanner({ onScan, onClose }: Props) {
     const video = videoRef.current
     const canvas = canvasRef.current
     const ctx = canvas.getContext('2d')!
-    const reader = new BrowserMultiFormatReader()
+    const reader = new BrowserMultiFormatReader(SERIAL_HINTS)
     setHint(false)
 
     navigator.mediaDevices
