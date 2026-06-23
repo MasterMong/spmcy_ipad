@@ -20,7 +20,7 @@ export function Reports() {
 
   const { data: studentPage } = useQuery({
     queryKey: ['students-report', selectedGrade, selectedClass],
-    queryFn: () => getStudents({ grade: selectedGrade ? Number(selectedGrade) : undefined, class_room: selectedClass || undefined }, 1, 9999),
+    queryFn: () => getStudents({ grade: selectedGrade ? Number(selectedGrade) : undefined, class_room: selectedClass || undefined, sort_by: 'student_number' }, 1, 9999),
     enabled: reportType === 'class' && !!selectedGrade && !!selectedClass,
   })
   const students = studentPage?.items ?? []
@@ -110,7 +110,7 @@ export function Reports() {
             <table className="w-full text-sm border-collapse">
               <thead>
                 <tr>
-                  <th className="border border-gray-400 px-3 py-2 text-center w-8">ที่</th>
+                  <th className="border border-gray-400 px-3 py-2 text-center w-8">เลขที่</th>
                   <th className="border border-gray-400 px-3 py-2 text-left">รหัสนักเรียน</th>
                   <th className="border border-gray-400 px-3 py-2 text-left">ชื่อ-นามสกุล</th>
                   <th className="border border-gray-400 px-3 py-2 text-center">Serial Number</th>
@@ -120,7 +120,7 @@ export function Reports() {
               <tbody>
                 {students.map((s, i) => (
                   <tr key={s.student_id} className="hover:bg-gray-50">
-                    <td className="border border-gray-300 px-3 py-3 text-center text-gray-500">{i + 1}</td>
+                    <td className="border border-gray-300 px-3 py-3 text-center text-gray-500">{s.student_number ?? i + 1}</td>
                     <td className="border border-gray-300 px-3 py-3 font-mono text-xs">{s.student_id}</td>
                     <td className="border border-gray-300 px-3 py-3">{s.name}</td>
                     <td className="border border-gray-300 px-3 py-3 text-center font-mono text-xs">{s.assignment?.serial_number ?? '—'}</td>

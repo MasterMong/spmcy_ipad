@@ -10,6 +10,7 @@ export function useFilterParams() {
     class_room: searchParams.get('class_room') || undefined,
     subject_group: searchParams.get('subject_group') || undefined,
     status: (searchParams.get('status') as AssignmentStatus) || undefined,
+    sort_by: (searchParams.get('sort_by') as Filters['sort_by']) || undefined,
   }
 
   const page = Number(searchParams.get('page') || '1')
