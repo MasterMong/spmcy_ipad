@@ -113,7 +113,7 @@ export function Students() {
         <table className="w-full text-sm">
           <thead>
             <tr className="bg-gray-200 border-b-2 border-gray-400">
-              <th className="text-left px-4 py-3 font-bold text-gray-900">
+              <th className="hidden sm:table-cell text-left px-4 py-3 font-bold text-gray-900">
                 <button
                   className="flex items-center gap-1 hover:text-blue-700"
                   onClick={() => set('sort_by', 'student_id')}
@@ -121,7 +121,7 @@ export function Students() {
                   รหัส {filters.sort_by === 'student_id' || !filters.sort_by ? <ArrowUp size={13} /> : <ArrowUpDown size={13} className="text-gray-400" />}
                 </button>
               </th>
-              <th className="hidden sm:table-cell text-left px-4 py-3 font-bold text-gray-900">
+              <th className="text-left px-4 py-3 font-bold text-gray-900">
                 <button
                   className="flex items-center gap-1 hover:text-blue-700"
                   onClick={() => set('sort_by', 'student_number')}
@@ -152,8 +152,8 @@ export function Students() {
             )}
             {students.map(s => (
               <tr key={s.student_id} className="hover:bg-gray-50">
-                <td className="px-4 py-3 font-mono font-semibold text-gray-700 text-xs">{s.student_id}</td>
-                <td className="hidden sm:table-cell px-4 py-3 text-center text-gray-600 text-sm">{s.student_number ?? '—'}</td>
+                <td className="hidden sm:table-cell px-4 py-3 font-mono font-semibold text-gray-700 text-xs">{s.student_id}</td>
+                <td className="px-4 py-3 text-center text-gray-600 text-sm font-semibold">{s.student_number ?? '—'}</td>
                 <td className="px-4 py-3 font-semibold text-gray-900">{s.name}</td>
                 <td className="px-4 py-3 font-semibold text-gray-800">ม.{s.grade}/{s.class_room}</td>
                 <td className="hidden sm:table-cell px-4 py-3 font-mono font-semibold text-gray-900">
