@@ -224,6 +224,25 @@ export async function getSubjectGroups(): Promise<string[]> {
   return [...new Set(mockTeachers.map(t => t.subject_group))].sort()
 }
 
+// ─── Photo gallery ───────────────────────────────────────────────────────────
+export interface DeliveryPhotoItem {
+  id: string
+  photo_url: string
+  taken_at: string
+  taken_by: string
+  assignee_type: 'student' | 'teacher'
+  serial_number: string
+  person_name: string
+  grade: number | null
+  class_room: string | null
+  subject_group: string | null
+}
+
+export async function getDeliveryPhotos(): Promise<DeliveryPhotoItem[]> {
+  if (!USE_MOCK) return apiFetch('/assignments/photos')
+  return []
+}
+
 // ─── Student portal ───────────────────────────────────────────────────────────
 export interface StudentVerifyResult {
   student: { student_id: string; name: string; grade: number; class_room: string }

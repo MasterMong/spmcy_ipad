@@ -1,6 +1,6 @@
 from datetime import datetime, timezone
 from fastapi import APIRouter, Depends, HTTPException, UploadFile, File
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, selectinload
 from sqlalchemy import select
 import aiofiles, os
 
@@ -12,6 +12,39 @@ router = APIRouter(prefix="/api/assignments", tags=["assignments"])
 
 UPLOAD_DIR = os.getenv("UPLOAD_DIR", "uploads")
 os.makedirs(UPLOAD_DIR, exist_ok=True)
+
+
+@router.get("/photos")
+def list_photos(db: Session = Depends(get_db)):
+    photos = db.scalars(
+        select(DeliveryPhoto)
+        .options(
+            selectinload(DeliveryPhoto.assignment)
+            .selectinload(DeviceAssignment.student)
+        )
+        .options(
+            selectinload(DeliveryPhoto.assignment)
+            .selectinload(DeviceAssignment.teacher)
+        )
+        .order_by(DeliveryPhoto.taken_at.desc())
+    ).all()
+
+    result = []
+    for p in photos:
+        a = p.assignment
+        result.append({
+            "id": p.id,
+            "photo_url": p.photo_url,
+            "taken_at": p.taken_at.isoformat(),
+            "taken_by": p.taken_by,
+            "assignee_type": a.assignee_type,
+            "serial_number": a.serial_number,
+            "person_name": (a.student.name if a.student else None) or (a.teacher.name if a.teacher else "—"),
+            "grade": a.student.grade if a.student else None,
+            "class_room": a.student.class_room if a.student else None,
+            "subject_group": a.teacher.subject_group if a.teacher else None,
+        })
+    return result
 
 
 @router.get("", response_model=list[AssignmentOut])
