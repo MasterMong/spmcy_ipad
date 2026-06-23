@@ -5,7 +5,7 @@ import { getStudents, deleteAssignment, getClassRooms } from '../api/client'
 import { StatusBadge } from '../components/StatusBadge'
 import { AssignModal } from '../components/AssignModal'
 import { useFilterParams } from '../hooks/useFilterParams'
-import { Search, Upload, Link2, CheckCircle, X, GraduationCap } from 'lucide-react'
+import { Search, Upload, Link2, CheckCircle, X, GraduationCap, ArrowUpDown, ArrowUp, ArrowDown } from 'lucide-react'
 import type { Student } from '../types'
 
 const inputCls = 'rounded-md border-2 border-gray-400 px-3 py-2 text-sm text-gray-900 focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 bg-white'
@@ -98,8 +98,22 @@ export function Students() {
         <table className="w-full text-sm">
           <thead>
             <tr className="bg-gray-200 border-b-2 border-gray-400">
-              <th className="hidden sm:table-cell text-left px-4 py-3 font-bold text-gray-900">รหัส</th>
-              <th className="text-left px-4 py-3 font-bold text-gray-900">ชื่อ-นามสกุล</th>
+              <th className="text-left px-4 py-3 font-bold text-gray-900">
+                <button
+                  className="flex items-center gap-1 hover:text-blue-700"
+                  onClick={() => set('sort_by', 'student_id')}
+                >
+                  รหัส {filters.sort_by === 'student_id' || !filters.sort_by ? <ArrowUp size={13} /> : <ArrowUpDown size={13} className="text-gray-400" />}
+                </button>
+              </th>
+              <th className="text-left px-4 py-3 font-bold text-gray-900">
+                <button
+                  className="flex items-center gap-1 hover:text-blue-700"
+                  onClick={() => set('sort_by', 'name')}
+                >
+                  ชื่อ-นามสกุล {filters.sort_by === 'name' ? <ArrowUp size={13} /> : <ArrowUpDown size={13} className="text-gray-400" />}
+                </button>
+              </th>
               <th className="text-left px-4 py-3 font-bold text-gray-900">ชั้น/ห้อง</th>
               <th className="hidden sm:table-cell text-left px-4 py-3 font-bold text-gray-900">Serial Number</th>
               <th className="text-left px-4 py-3 font-bold text-gray-900">สถานะ</th>
@@ -115,7 +129,7 @@ export function Students() {
             )}
             {students.map(s => (
               <tr key={s.student_id} className="hover:bg-gray-50">
-                <td className="hidden sm:table-cell px-4 py-3 font-mono font-semibold text-gray-700 text-xs">{s.student_id}</td>
+                <td className="px-4 py-3 font-mono font-semibold text-gray-700 text-xs">{s.student_id}</td>
                 <td className="px-4 py-3 font-semibold text-gray-900">{s.name}</td>
                 <td className="px-4 py-3 font-semibold text-gray-800">ม.{s.grade}/{s.class_room}</td>
                 <td className="hidden sm:table-cell px-4 py-3 font-mono font-semibold text-gray-900">

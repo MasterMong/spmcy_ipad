@@ -60,6 +60,7 @@ export async function getStudents(filters: Filters = {}, page = 1, page_size = 5
     if (filters.class_room) params.set('class_room', filters.class_room)
     if (filters.status) params.set('status', filters.status)
     if (filters.q) params.set('q', filters.q)
+    if (filters.sort_by) params.set('sort_by', filters.sort_by)
     params.set('page', String(page))
     params.set('page_size', String(page_size))
     return apiFetch(`/students?${params}`)

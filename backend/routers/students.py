@@ -42,11 +42,13 @@ def list_students(
     class_room: str | None = None,
     status: str | None = None,
     q: str | None = None,
+    sort_by: str = "student_id",
     page: int = 1,
     page_size: int = 50,
     db: Session = Depends(get_db),
 ):
-    stmt = select(Student).options(selectinload(Student.assignment)).order_by(Student.student_id)
+    order_col = Student.name if sort_by == "name" else Student.student_id
+    stmt = select(Student).options(selectinload(Student.assignment)).order_by(order_col)
     if grade:
         stmt = stmt.where(Student.grade == grade)
     if class_room:

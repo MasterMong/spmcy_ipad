@@ -61,4 +61,5 @@ export interface Filters {
   subject_group?: string
   assignee_type?: AssigneeType | ''
   q?: string
+  sort_by?: 'student_id' | 'name'
 }
