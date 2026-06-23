@@ -25,6 +25,7 @@ services:
       context: ./frontend
       args:
         VITE_ADMIN_PASSWORD: ${VITE_ADMIN_PASSWORD:-}
+        VITE_CANCEL_PASSWORD: ${VITE_CANCEL_PASSWORD:-}
     container_name: ipad-frontend
     restart: unless-stopped
     ports:

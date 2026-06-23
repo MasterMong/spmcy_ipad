@@ -11,6 +11,8 @@ COPY . .
 ENV VITE_USE_MOCK=false
 ARG VITE_ADMIN_PASSWORD
 ENV VITE_ADMIN_PASSWORD=$VITE_ADMIN_PASSWORD
+ARG VITE_CANCEL_PASSWORD
+ENV VITE_CANCEL_PASSWORD=$VITE_CANCEL_PASSWORD
 RUN npm run build
 
 # ─── Serve stage ──────────────────────────────────────────────────────────────

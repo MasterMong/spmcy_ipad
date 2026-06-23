@@ -201,6 +201,14 @@ export async function deleteAssignment(id: string): Promise<void> {
   mockAssignments = mockAssignments.filter(a => a.id !== id)
 }
 
+export async function revertDelivery(id: string): Promise<Assignment> {
+  if (!USE_MOCK) return apiFetch(`/assignments/${id}/revert`, { method: 'POST' })
+  mockAssignments = mockAssignments.map(a =>
+    a.id === id ? { ...a, status: 'assigned' as AssignmentStatus, delivered_at: null, delivered_by: null } : a
+  )
+  return mockAssignments.find(a => a.id === id)!
+}
+
 export async function deliverAssignment(id: string, deliveredBy: string): Promise<Assignment> {
   if (!USE_MOCK) {
     return apiFetch(`/assignments/${id}/deliver`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ delivered_by: deliveredBy }) })

@@ -74,6 +74,21 @@ def delete_assignment(assignment_id: str, db: Session = Depends(get_db)):
     db.commit()
 
 
+@router.post("/{assignment_id}/revert", response_model=AssignmentOut)
+def revert_delivery(assignment_id: str, db: Session = Depends(get_db)):
+    a = db.get(DeviceAssignment, assignment_id)
+    if not a:
+        raise HTTPException(404, "Assignment not found")
+    if a.status != "delivered":
+        raise HTTPException(409, "Assignment is not delivered")
+    a.status = "assigned"
+    a.delivered_at = None
+    a.delivered_by = None
+    db.commit()
+    db.refresh(a)
+    return a
+
+
 @router.post("/{assignment_id}/deliver", response_model=AssignmentOut)
 def deliver_assignment(assignment_id: str, body: DeliverBody, db: Session = Depends(get_db)):
     a = db.get(DeviceAssignment, assignment_id)

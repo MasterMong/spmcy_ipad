@@ -1,18 +1,22 @@
 import { useState } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { Link } from 'react-router-dom'
-import { getStudents, deleteAssignment, getClassRooms } from '../api/client'
+import { getStudents, deleteAssignment, revertDelivery, getClassRooms } from '../api/client'
 import { StatusBadge } from '../components/StatusBadge'
 import { AssignModal } from '../components/AssignModal'
+import { CancelPasswordModal } from '../components/CancelPasswordModal'
 import { useFilterParams } from '../hooks/useFilterParams'
-import { Search, Upload, Link2, CheckCircle, X, GraduationCap, ArrowUpDown, ArrowUp, ArrowDown } from 'lucide-react'
+import { Search, Upload, Link2, CheckCircle, X, RotateCcw, GraduationCap, ArrowUpDown, ArrowUp } from 'lucide-react'
 import type { Student } from '../types'
+
+type CancelTarget = { assignmentId: string; action: 'pair' | 'confirm'; label: string }
 
 const inputCls = 'rounded-md border-2 border-gray-400 px-3 py-2 text-sm text-gray-900 focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 bg-white'
 
 export function Students() {
   const { filters, page, set, setPage, clear, hasFilters } = useFilterParams()
   const [assigning, setAssigning] = useState<Student | null>(null)
+  const [cancelTarget, setCancelTarget] = useState<CancelTarget | null>(null)
   const qc = useQueryClient()
   const { data: classRooms = [] } = useQuery({ queryKey: ['classrooms'], queryFn: getClassRooms })
   const grades = [...new Set(classRooms.map(c => c.grade))].sort()
@@ -28,6 +32,17 @@ export function Students() {
     mutationFn: (assignmentId: string) => deleteAssignment(assignmentId),
     onSuccess: () => qc.invalidateQueries({ queryKey: ['students'] }),
   })
+
+  const revertMutation = useMutation({
+    mutationFn: (assignmentId: string) => revertDelivery(assignmentId),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ['students'] }),
+  })
+
+  function handleCancelConfirmed() {
+    if (!cancelTarget) return
+    if (cancelTarget.action === 'pair') removeMutation.mutate(cancelTarget.assignmentId)
+    else revertMutation.mutate(cancelTarget.assignmentId)
+  }
 
   const roomsForGrade = filters.grade
     ? classRooms.filter(c => c.grade === filters.grade).map(c => c.class_room)
@@ -157,17 +172,25 @@ export function Students() {
                           <CheckCircle size={11} /> ยืนยัน
                         </button>
                         <button
-                          onClick={() => { if (confirm('ยกเลิกการจับคู่?')) removeMutation.mutate(s.assignment!.id) }}
+                          onClick={() => setCancelTarget({ assignmentId: s.assignment!.id, action: 'pair', label: s.name })}
                           className="inline-flex items-center gap-1 rounded px-2.5 py-1 text-xs font-bold bg-white text-red-700 hover:bg-red-50 border-2 border-red-400"
                         >
-                          <X size={11} /> ยกเลิก
+                          <X size={11} /> ยกเลิกจับคู่
                         </button>
                       </>
                     )}
                     {s.assignment?.status === 'delivered' && (
-                      <span className="text-xs font-medium text-gray-600">
-                        {s.assignment.delivered_at ? new Date(s.assignment.delivered_at).toLocaleDateString('th-TH') : 'ส่งมอบแล้ว'}
-                      </span>
+                      <>
+                        <span className="text-xs font-medium text-gray-600">
+                          {s.assignment.delivered_at ? new Date(s.assignment.delivered_at).toLocaleDateString('th-TH') : 'ส่งมอบแล้ว'}
+                        </span>
+                        <button
+                          onClick={() => setCancelTarget({ assignmentId: s.assignment!.id, action: 'confirm', label: s.name })}
+                          className="inline-flex items-center gap-1 rounded px-2.5 py-1 text-xs font-bold bg-white text-orange-700 hover:bg-orange-50 border-2 border-orange-400"
+                        >
+                          <RotateCcw size={11} /> ยกเลิกยืนยัน
+                        </button>
+                      </>
                     )}
                   </div>
                 </td>
@@ -218,6 +241,14 @@ export function Students() {
           assigneeType="student"
           person={{ id: assigning.student_id, name: assigning.name, subtitle: `ม.${assigning.grade}/${assigning.class_room} · รหัส ${assigning.student_id}` }}
           onClose={() => setAssigning(null)}
+        />
+      )}
+      {cancelTarget && (
+        <CancelPasswordModal
+          title={cancelTarget.action === 'pair' ? 'ยกเลิกการจับคู่' : 'ยกเลิกการยืนยันส่งมอบ'}
+          description={`${cancelTarget.label}`}
+          onConfirm={handleCancelConfirmed}
+          onClose={() => setCancelTarget(null)}
         />
       )}
     </div>
