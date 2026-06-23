@@ -35,8 +35,7 @@ export function AssignModal({ person, assigneeType, onClose }: Props) {
   })
 
   function handleScan(value: string) {
-    // Apple box barcodes prefix serial numbers with 'S' — strip it
-    const cleaned = value.replace(/^\(S\)|^S(?=[A-Z0-9]{6,})/i, '')
+    const cleaned = value.startsWith('S') ? value.slice(1) : value
     setSn(cleaned)
     setScanning(false)
     setTimeout(() => snRef.current?.focus(), 50)
