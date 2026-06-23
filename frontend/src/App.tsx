@@ -20,12 +20,12 @@ export default function App() {
         <Routes>
           {/* No-login shareable pages — outside Layout */}
           <Route path="/confirm/:assignmentId" element={<Confirm />} />
-          <Route path="/student-upload" element={<StudentUpload />} />
 
           {/* Main app */}
           <Route element={<Layout />}>
             <Route path="/" element={<Dashboard />} />
             <Route path="/reports" element={<Reports />} />
+            <Route path="/student-upload" element={<StudentUpload />} />
             <Route path="/how-to" element={<HowTo />} />
 
             {/* Password-protected (requires VITE_ADMIN_PASSWORD) */}

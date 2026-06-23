@@ -63,7 +63,6 @@ export function Dashboard() {
               <tr className="bg-gray-200 border-b-2 border-gray-400">
                 <th className="text-left px-3 sm:px-4 py-3 font-bold text-gray-900">ประเภท</th>
                 <th className="text-left px-3 sm:px-4 py-3 font-bold text-gray-900">ชื่อ</th>
-                <th className="text-left px-3 sm:px-4 py-3 font-bold text-gray-900">Serial Number</th>
                 <th className="text-left px-3 sm:px-4 py-3 font-bold text-gray-900">สถานะ</th>
                 <th className="hidden sm:table-cell text-left px-4 py-3 font-bold text-gray-900">เวลา</th>
                 <th className="hidden md:table-cell text-left px-4 py-3 font-bold text-gray-900">ดำเนินการโดย</th>
@@ -84,7 +83,6 @@ export function Dashboard() {
                   <td className="px-3 sm:px-4 py-3 font-semibold text-gray-900 max-w-[120px] sm:max-w-none truncate">
                     {a.student?.name ?? a.teacher?.name ?? '—'}
                   </td>
-                  <td className="px-3 sm:px-4 py-3 font-mono font-semibold text-gray-900 text-xs sm:text-sm">{a.serial_number}</td>
                   <td className="px-3 sm:px-4 py-3">
                     <StatusBadge status={a.status} />
                   </td>

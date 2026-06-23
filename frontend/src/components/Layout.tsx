@@ -8,6 +8,7 @@ import {
   GraduationCap,
   FileText,
   BookOpen,
+  Upload,
   Menu,
   X,
 } from "lucide-react";
@@ -17,6 +18,7 @@ const nav = [
   { to: "/students", label: "นักเรียน", icon: GraduationCap },
   { to: "/teachers", label: "ครู", icon: Users },
   { to: "/reports", label: "รายงาน", icon: FileText },
+  { to: "/student-upload", label: "อัปโหลดรูป", icon: Upload },
   { to: "/how-to", label: "คู่มือ", icon: BookOpen },
 ];
 
