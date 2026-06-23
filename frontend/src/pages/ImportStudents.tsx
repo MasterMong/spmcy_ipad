@@ -29,6 +29,7 @@ function parseStudentCSV(text: string): StudentRow[] {
       national_id: r['ID-03'] ?? '',
       grade: Number(r['ชั้น']),
       class_room: r['ห้อง'] ?? '',
+      student_number: r['เลขที่'] ? Number(r['เลขที่']) : null,
       error: errors.join(', ') || undefined,
     }
   })

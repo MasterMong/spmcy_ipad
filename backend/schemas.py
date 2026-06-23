@@ -9,6 +9,7 @@ class StudentBase(BaseModel):
     national_id: str
     grade: int
     class_room: str
+    student_number: int | None = None
 
 
 class AssignmentBrief(BaseModel):

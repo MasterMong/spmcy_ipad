@@ -7,6 +7,7 @@ export interface Student {
   national_id: string
   grade: number
   class_room: string
+  student_number: number | null
   created_at: string
 }
 
@@ -61,5 +62,5 @@ export interface Filters {
   subject_group?: string
   assignee_type?: AssigneeType | ''
   q?: string
-  sort_by?: 'student_id' | 'name'
+  sort_by?: 'student_id' | 'name' | 'student_number'
 }

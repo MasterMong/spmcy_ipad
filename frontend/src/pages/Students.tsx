@@ -121,6 +121,14 @@ export function Students() {
                   รหัส {filters.sort_by === 'student_id' || !filters.sort_by ? <ArrowUp size={13} /> : <ArrowUpDown size={13} className="text-gray-400" />}
                 </button>
               </th>
+              <th className="hidden sm:table-cell text-left px-4 py-3 font-bold text-gray-900">
+                <button
+                  className="flex items-center gap-1 hover:text-blue-700"
+                  onClick={() => set('sort_by', 'student_number')}
+                >
+                  เลขที่ {filters.sort_by === 'student_number' ? <ArrowUp size={13} /> : <ArrowUpDown size={13} className="text-gray-400" />}
+                </button>
+              </th>
               <th className="text-left px-4 py-3 font-bold text-gray-900">
                 <button
                   className="flex items-center gap-1 hover:text-blue-700"
@@ -137,14 +145,15 @@ export function Students() {
           </thead>
           <tbody className="divide-y divide-gray-300">
             {isLoading && (
-              <tr><td colSpan={6} className="px-4 py-8 text-center text-gray-600 font-medium">กำลังโหลด...</td></tr>
+              <tr><td colSpan={7} className="px-4 py-8 text-center text-gray-600 font-medium">กำลังโหลด...</td></tr>
             )}
             {!isLoading && students.length === 0 && (
-              <tr><td colSpan={6} className="px-4 py-8 text-center text-gray-600 font-medium">ไม่พบข้อมูล</td></tr>
+              <tr><td colSpan={7} className="px-4 py-8 text-center text-gray-600 font-medium">ไม่พบข้อมูล</td></tr>
             )}
             {students.map(s => (
               <tr key={s.student_id} className="hover:bg-gray-50">
                 <td className="px-4 py-3 font-mono font-semibold text-gray-700 text-xs">{s.student_id}</td>
+                <td className="hidden sm:table-cell px-4 py-3 text-center text-gray-600 text-sm">{s.student_number ?? '—'}</td>
                 <td className="px-4 py-3 font-semibold text-gray-900">{s.name}</td>
                 <td className="px-4 py-3 font-semibold text-gray-800">ม.{s.grade}/{s.class_room}</td>
                 <td className="hidden sm:table-cell px-4 py-3 font-mono font-semibold text-gray-900">

@@ -8,12 +8,16 @@ from routers import students, teachers, assignments, dashboard, reports, student
 
 Base.metadata.create_all(bind=engine)
 
-# Add source column to existing delivery_photos tables (safe no-op if already present)
+# Safe column migrations — no-op if columns already exist
 with engine.connect() as _conn:
-    existing = [r[1] for r in _conn.execute(__import__('sqlalchemy').text("PRAGMA table_info(delivery_photos)")).fetchall()]
-    if "source" not in existing:
-        _conn.execute(__import__('sqlalchemy').text("ALTER TABLE delivery_photos ADD COLUMN source TEXT NOT NULL DEFAULT 'staff'"))
-        _conn.commit()
+    _text = __import__('sqlalchemy').text
+    _photos_cols = [r[1] for r in _conn.execute(_text("PRAGMA table_info(delivery_photos)")).fetchall()]
+    if "source" not in _photos_cols:
+        _conn.execute(_text("ALTER TABLE delivery_photos ADD COLUMN source TEXT NOT NULL DEFAULT 'staff'"))
+    _students_cols = [r[1] for r in _conn.execute(_text("PRAGMA table_info(students)")).fetchall()]
+    if "student_number" not in _students_cols:
+        _conn.execute(_text("ALTER TABLE students ADD COLUMN student_number INTEGER"))
+    _conn.commit()
 
 app = FastAPI(title="iPad Distribution API", version="0.1.0")
 

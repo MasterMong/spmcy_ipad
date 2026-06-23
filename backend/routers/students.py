@@ -47,7 +47,12 @@ def list_students(
     page_size: int = 50,
     db: Session = Depends(get_db),
 ):
-    order_col = Student.name if sort_by == "name" else Student.student_id
+    if sort_by == "name":
+        order_col = Student.name
+    elif sort_by == "student_number":
+        order_col = Student.student_number
+    else:
+        order_col = Student.student_id
     stmt = select(Student).options(selectinload(Student.assignment)).order_by(order_col)
     if grade:
         stmt = stmt.where(Student.grade == grade)

@@ -15,6 +15,7 @@ class Student(Base):
     national_id: Mapped[str] = mapped_column(String(13), unique=True, nullable=False)
     grade: Mapped[int] = mapped_column(Integer, nullable=False)
     class_room: Mapped[str] = mapped_column(String(10), nullable=False)
+    student_number: Mapped[int | None] = mapped_column(Integer, nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=now_utc)
 
     assignment: Mapped["DeviceAssignment | None"] = relationship(back_populates="student", uselist=False)
