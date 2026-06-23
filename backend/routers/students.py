@@ -21,18 +21,26 @@ def list_classrooms(db: Session = Depends(get_db)):
 
 @router.post("/import-json", status_code=201)
 def import_students_json(rows: List[StudentBase], db: Session = Depends(get_db)):
-    created = updated = 0
+    from sqlalchemy.exc import IntegrityError
+    created = updated = skipped = 0
     for row in rows:
         existing = db.get(Student, row.student_id)
-        if existing:
-            for k, v in row.model_dump().items():
-                setattr(existing, k, v)
-            updated += 1
-        else:
-            db.add(Student(**row.model_dump()))
-            created += 1
+        try:
+            with db.begin_nested():
+                if existing:
+                    for k, v in row.model_dump().items():
+                        setattr(existing, k, v)
+                    db.flush([existing])
+                    updated += 1
+                else:
+                    s = Student(**row.model_dump())
+                    db.add(s)
+                    db.flush([s])
+                    created += 1
+        except IntegrityError:
+            skipped += 1
     db.commit()
-    return {"imported": created + updated, "created": created, "updated": updated}
+    return {"imported": created + updated, "created": created, "updated": updated, "skipped": skipped}
 
 
 @router.get("", response_model=StudentListOut)
