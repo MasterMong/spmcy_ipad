@@ -46,7 +46,7 @@ def list_students(
     page_size: int = 50,
     db: Session = Depends(get_db),
 ):
-    stmt = select(Student).options(selectinload(Student.assignment)).order_by(Student.grade, Student.class_room, Student.name)
+    stmt = select(Student).options(selectinload(Student.assignment)).order_by(Student.student_id)
     if grade:
         stmt = stmt.where(Student.grade == grade)
     if class_room:
