@@ -243,6 +243,16 @@ export async function getDeliveryPhotos(): Promise<DeliveryPhotoItem[]> {
   return []
 }
 
+export async function uploadDeliveryPhoto(assignmentId: string, takenBy: string, photoDataUrl: string): Promise<{ photo_url: string }> {
+  const blob = dataURLtoBlob(photoDataUrl)
+  const fd = new FormData()
+  fd.append('file', blob, 'photo.jpg')
+  const params = new URLSearchParams({ taken_by: takenBy })
+  const r = await fetch(`${BASE}/assignments/${assignmentId}/photo?${params}`, { method: 'POST', body: fd })
+  if (!r.ok) throw new Error(`HTTP ${r.status}`)
+  return r.json()
+}
+
 // ─── Student portal ───────────────────────────────────────────────────────────
 export interface StudentVerifyResult {
   student: { student_id: string; name: string; grade: number; class_room: string }

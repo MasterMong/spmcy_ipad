@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import { useQuery, useMutation } from '@tanstack/react-query'
-import { getAssignment, deliverAssignment } from '../api/client'
+import { getAssignment, deliverAssignment, uploadDeliveryPhoto } from '../api/client'
 import { CheckCircle, Camera, Tablet, Image, X } from 'lucide-react'
 
 export function Confirm() {
@@ -24,7 +24,12 @@ export function Confirm() {
   })
 
   const mutation = useMutation({
-    mutationFn: () => deliverAssignment(assignmentId!, deliveredBy.trim()),
+    mutationFn: async () => {
+      await deliverAssignment(assignmentId!, deliveredBy.trim())
+      if (photo) {
+        await uploadDeliveryPhoto(assignmentId!, deliveredBy.trim(), photo)
+      }
+    },
     onSuccess: () => setDone(true),
   })
 
