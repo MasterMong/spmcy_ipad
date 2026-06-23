@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException, UploadFile, File
 from sqlalchemy.orm import Session, selectinload
-from sqlalchemy import select, distinct
+from sqlalchemy import select, distinct, cast, Integer
 import csv, io
 from typing import List
 
@@ -14,7 +14,7 @@ router = APIRouter(prefix="/api/students", tags=["students"])
 @router.get("/classrooms", response_model=list[ClassroomItem])
 def list_classrooms(db: Session = Depends(get_db)):
     rows = db.execute(
-        select(Student.grade, Student.class_room).distinct().order_by(Student.grade, Student.class_room)
+        select(Student.grade, Student.class_room).distinct().order_by(Student.grade, cast(Student.class_room, Integer))
     ).all()
     return [{"grade": r.grade, "class_room": r.class_room} for r in rows]
 

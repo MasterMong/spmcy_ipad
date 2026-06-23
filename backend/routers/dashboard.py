@@ -2,7 +2,7 @@ import asyncio, json
 from fastapi import APIRouter, Depends
 from fastapi.responses import StreamingResponse
 from sqlalchemy.orm import Session
-from sqlalchemy import func, select, case, outerjoin
+from sqlalchemy import func, select, case, outerjoin, cast, Integer
 
 from database import get_db
 from models import Student, Teacher, DeviceAssignment
@@ -59,7 +59,7 @@ def get_group_stats(db: Session = Depends(get_db)):
         )
         .outerjoin(DeviceAssignment, DeviceAssignment.student_id == Student.student_id)
         .group_by(Student.grade, Student.class_room)
-        .order_by(Student.grade, Student.class_room)
+        .order_by(Student.grade, cast(Student.class_room, Integer))
     ).all()
 
     classrooms = [
