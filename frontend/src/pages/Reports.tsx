@@ -163,7 +163,12 @@ export function Reports() {
           )}
 
           {reportType === 'class' && (
-            <div className="mt-10 flex justify-end">
+            <div className="mt-10 flex justify-between">
+              <div className="text-center text-sm leading-loose">
+                <p>ลงชื่อ ............................................ ครูที่ปรึกษา</p>
+                <p className="mt-2">( ...................................................... )</p>
+                <p className="mt-3">วันที่ ......... เดือน .................. พ.ศ. ............</p>
+              </div>
               <div className="text-center text-sm leading-loose">
                 <p>ลงชื่อ ............................................ ครูที่ปรึกษา</p>
                 <p className="mt-2">( ...................................................... )</p>
