@@ -77,6 +77,7 @@ async def upload_student_photos(
             assignment_id=assignment_id,
             photo_url=f"/uploads/{filename}",
             taken_by=student.name,
+            source="student_portal",
         )
         db.add(photo)
         photo_urls.append(f"/uploads/{filename}")

@@ -8,6 +8,13 @@ from routers import students, teachers, assignments, dashboard, reports, student
 
 Base.metadata.create_all(bind=engine)
 
+# Add source column to existing delivery_photos tables (safe no-op if already present)
+with engine.connect() as _conn:
+    existing = [r[1] for r in _conn.execute(__import__('sqlalchemy').text("PRAGMA table_info(delivery_photos)")).fetchall()]
+    if "source" not in existing:
+        _conn.execute(__import__('sqlalchemy').text("ALTER TABLE delivery_photos ADD COLUMN source TEXT NOT NULL DEFAULT 'staff'"))
+        _conn.commit()
+
 app = FastAPI(title="iPad Distribution API", version="0.1.0")
 
 # CORS origins configurable via env (comma-separated). Behind nginx the frontend

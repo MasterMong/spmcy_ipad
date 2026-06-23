@@ -70,5 +70,6 @@ class DeliveryPhoto(Base):
     photo_url: Mapped[str] = mapped_column(String(500), nullable=False)
     taken_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=now_utc)
     taken_by: Mapped[str] = mapped_column(String(150), nullable=False)
+    source: Mapped[str] = mapped_column(String(20), nullable=False, server_default="staff", default="staff")
 
     assignment: Mapped["DeviceAssignment"] = relationship(back_populates="photos")

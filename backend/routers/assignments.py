@@ -18,6 +18,7 @@ os.makedirs(UPLOAD_DIR, exist_ok=True)
 def list_photos(db: Session = Depends(get_db)):
     photos = db.scalars(
         select(DeliveryPhoto)
+        .where(DeliveryPhoto.source == "staff")
         .options(
             selectinload(DeliveryPhoto.assignment)
             .selectinload(DeviceAssignment.student)

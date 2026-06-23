@@ -20,7 +20,6 @@ const nav = [
   { to: "/teachers", label: "ครู", icon: Users },
   { to: "/reports", label: "รายงาน", icon: FileText },
   { to: "/gallery", label: "แกลเลอรี", icon: Images },
-  { to: "/student-upload", label: "อัปโหลดรูป", icon: Upload },
   { to: "/how-to", label: "คู่มือ", icon: BookOpen },
 ];
 
