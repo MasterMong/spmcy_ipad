@@ -23,6 +23,15 @@ function apiFetch<T>(path: string, options?: RequestInit): Promise<T> {
 }
 
 // ─── Dashboard ────────────────────────────────────────────────────────────────
+export interface ClassroomStat { grade: number; class_room: string; total: number; delivered: number; assigned: number; pending: number }
+export interface SubjectStat { subject_group: string; total: number; delivered: number; assigned: number; pending: number }
+export interface GroupStats { classrooms: ClassroomStat[]; subjects: SubjectStat[] }
+
+export async function getDashboardGroups(): Promise<GroupStats> {
+  if (!USE_MOCK) return apiFetch('/dashboard/groups')
+  return { classrooms: [], subjects: [] }
+}
+
 export async function getDashboardSummary(): Promise<DashboardSummary> {
   if (!USE_MOCK) return apiFetch('/dashboard/summary')
 

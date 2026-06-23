@@ -1,13 +1,34 @@
 import { useQuery } from '@tanstack/react-query'
 import { useEffect, useState } from 'react'
-import { getDashboardSummary, getAssignments } from '../api/client'
+import { getDashboardSummary, getDashboardGroups, getAssignments } from '../api/client'
+import type { ClassroomStat, SubjectStat } from '../api/client'
 import { StatCard } from '../components/StatCard'
 import { StatusBadge } from '../components/StatusBadge'
 import { GraduationCap, Users, PackageCheck, Clock, CircleSlash } from 'lucide-react'
 import type { Assignment } from '../types'
 
+function GroupRow({ label, total, delivered, assigned }: { label: string; total: number; delivered: number; assigned: number }) {
+  const pct = total > 0 ? Math.round(delivered / total * 100) : 0
+  return (
+    <div className="flex items-center gap-3 px-3 py-2 border-b border-gray-100 last:border-0">
+      <span className="text-xs font-semibold text-gray-700 w-24 shrink-0 truncate">{label}</span>
+      <div className="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
+        <div className="h-full flex">
+          <div className="bg-green-500 transition-all duration-500" style={{ width: `${total > 0 ? delivered / total * 100 : 0}%` }} />
+          <div className="bg-yellow-400 transition-all duration-500" style={{ width: `${total > 0 ? assigned / total * 100 : 0}%` }} />
+        </div>
+      </div>
+      <span className="text-xs text-gray-500 w-16 text-right shrink-0">
+        <span className="font-bold text-green-700">{delivered}</span>/{total}
+        <span className="text-gray-400 ml-1">({pct}%)</span>
+      </span>
+    </div>
+  )
+}
+
 export function Dashboard() {
   const { data: summary } = useQuery({ queryKey: ['dashboard'], queryFn: getDashboardSummary, refetchInterval: 5000 })
+  const { data: groups } = useQuery({ queryKey: ['dashboard-groups'], queryFn: getDashboardGroups, refetchInterval: 10000 })
   const { data: assignments, refetch } = useQuery({
     queryKey: ['assignments-recent'],
     queryFn: () => getAssignments(),
@@ -91,8 +112,53 @@ export function Dashboard() {
         </>
       )}
 
+      {/* Group breakdown */}
+      {groups && (
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+          {/* By classroom */}
+          <div>
+            <h3 className="text-sm font-bold text-gray-900 mb-3 flex items-center gap-1.5"><GraduationCap size={14} /> ความคืบหน้าตามห้องเรียน</h3>
+            <div className="rounded-xl border-2 border-gray-300 bg-white overflow-hidden">
+              {Object.entries(
+                groups.classrooms.reduce((acc, r) => {
+                  const g = `ม.${r.grade}`
+                  if (!acc[g]) acc[g] = []
+                  acc[g].push(r)
+                  return acc
+                }, {} as Record<string, ClassroomStat[]>)
+              ).map(([grade, rooms]) => (
+                <div key={grade}>
+                  <div className="bg-gray-100 px-3 py-1.5 text-xs font-bold text-gray-600 border-b border-gray-200">{grade}</div>
+                  {rooms.map(r => (
+                    <GroupRow
+                      key={`${r.grade}-${r.class_room}`}
+                      label={`ห้อง ${r.class_room}`}
+                      total={r.total} delivered={r.delivered} assigned={r.assigned}
+                    />
+                  ))}
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* By subject group */}
+          <div>
+            <h3 className="text-sm font-bold text-gray-900 mb-3 flex items-center gap-1.5"><Users size={14} /> ความคืบหน้าตามกลุ่มสาระ</h3>
+            <div className="rounded-xl border-2 border-gray-300 bg-white overflow-hidden">
+              {groups.subjects.map((s: SubjectStat) => (
+                <GroupRow
+                  key={s.subject_group}
+                  label={s.subject_group}
+                  total={s.total} delivered={s.delivered} assigned={s.assigned}
+                />
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
       <div>
-        <h3 className="text-sm font-bold text-gray-900 mb-3">กิจกรรมล่าสุด</h3>
+        <h3 className="text-sm font-bold text-gray-900 mb-3">กิจกรรมล่าสุด (15 รายการล่าสุด)</h3>
         <div className="overflow-x-auto rounded-lg border-2 border-gray-400 bg-white">
           <table className="w-full text-sm">
             <thead>
