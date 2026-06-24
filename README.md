@@ -25,8 +25,8 @@ docker compose version
 ### 1. ดึงโค้ดจาก GitHub
 
 ```bash
-git clone https://github.com/MasterMong/ipad.git
-cd ipad
+git clone https://github.com/MasterMong/spmcy_ipad.git
+cd spmcy_ipad
 ```
 
 ### 2. สร้างไฟล์ `.env`
