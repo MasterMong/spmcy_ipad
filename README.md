@@ -152,10 +152,10 @@ print(conn.execute('SELECT COUNT(*) FROM device_assignments').fetchone())
 ```nginx
 server {
     listen 443 ssl;
-    server_name ipad.phukhieo.ac.th;
+    server_name your.domain.ac.th;
 
-    ssl_certificate     /etc/letsencrypt/live/ipad.phukhieo.ac.th/fullchain.pem;
-    ssl_certificate_key /etc/letsencrypt/live/ipad.phukhieo.ac.th/privkey.pem;
+    ssl_certificate     /etc/letsencrypt/live/your.domain.ac.th/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/your.domain.ac.th/privkey.pem;
 
     location / {
         proxy_pass http://127.0.0.1:8080;
@@ -166,14 +166,14 @@ server {
 
 server {
     listen 80;
-    server_name ipad.phukhieo.ac.th;
+    server_name your.domain.ac.th;
     return 301 https://$host$request_uri;
 }
 ```
 
 ขอ SSL certificate ฟรีด้วย Let's Encrypt:
 ```bash
-certbot --nginx -d ipad.phukhieo.ac.th
+certbot --nginx -d your.domain.ac.th
 ```
 
 ---
