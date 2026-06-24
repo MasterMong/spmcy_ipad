@@ -9,3 +9,5 @@ __pycache__/
 data/
 .env
 frontend/.env
+csv/*.csv
+!csv/*.example.csv
