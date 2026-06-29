@@ -12,6 +12,7 @@ import { Reports } from './pages/Reports'
 import { HowTo } from './pages/HowTo'
 import { Gallery } from './pages/Gallery'
 import { StudentUploadReview } from './pages/StudentUploadReview'
+import { Progress } from './pages/Progress'
 
 const qc = new QueryClient({ defaultOptions: { queries: { staleTime: 3000 } } })
 
@@ -36,6 +37,7 @@ export default function App() {
               <Route path="/students" element={<Students />} />
               <Route path="/students/import" element={<ImportStudents />} />
               <Route path="/teachers" element={<Teachers />} />
+              <Route path="/progress" element={<Progress />} />
             </Route>
 
             {/* Admin-only: review student-uploaded photos (own password gate) */}

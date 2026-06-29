@@ -11,6 +11,7 @@ import {
   Upload,
   Images,
   Camera,
+  Activity,
   Menu,
   X,
 } from "lucide-react";
@@ -19,6 +20,7 @@ const nav = [
   { to: "/", label: "Dashboard", icon: LayoutDashboard, end: true },
   { to: "/students", label: "นักเรียน", icon: GraduationCap },
   { to: "/teachers", label: "ครู", icon: Users },
+  { to: "/progress", label: "ความคืบหน้า", icon: Activity },
   { to: "/reports", label: "รายงาน", icon: FileText },
   { to: "/gallery", label: "แกลเลอรี", icon: Images },
   { to: "/student-upload-review", label: "ภาพจากนักเรียน", icon: Camera },
