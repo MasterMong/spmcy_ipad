@@ -167,17 +167,16 @@ export function Progress() {
                 <SortBtn label="ชื่อ-นามสกุล" col="name" active={filters.sort_by} onSort={v => set('sort_by', v)} />
               </th>
               <th className="text-left px-4 py-3 font-bold text-gray-900">ชั้น/ห้อง</th>
-              <th className="hidden md:table-cell text-left px-4 py-3 font-bold text-gray-900">Serial Number</th>
               <th className="text-left px-4 py-3 font-bold text-gray-900">สถานะ</th>
               <th className="text-center px-4 py-3 font-bold text-gray-900">ส่งภาพ</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-200">
             {isLoading && (
-              <tr><td colSpan={7} className="px-4 py-8 text-center text-gray-500 font-medium">กำลังโหลด...</td></tr>
+              <tr><td colSpan={6} className="px-4 py-8 text-center text-gray-500 font-medium">กำลังโหลด...</td></tr>
             )}
             {!isLoading && students.length === 0 && (
-              <tr><td colSpan={7} className="px-4 py-8 text-center text-gray-500 font-medium">ไม่พบข้อมูล</td></tr>
+              <tr><td colSpan={6} className="px-4 py-8 text-center text-gray-500 font-medium">ไม่พบข้อมูล</td></tr>
             )}
             {students.map(s => {
               const hasPhoto = photoStudentIds.has(s.student_id)
@@ -187,9 +186,6 @@ export function Progress() {
                   <td className="hidden sm:table-cell px-4 py-2.5 font-mono text-xs text-gray-500">{s.student_id}</td>
                   <td className="px-4 py-2.5 font-semibold text-gray-900">{s.name}</td>
                   <td className="px-4 py-2.5 font-semibold text-gray-700 whitespace-nowrap">ม.{s.grade}/{s.class_room}</td>
-                  <td className="hidden md:table-cell px-4 py-2.5 font-mono text-xs text-gray-700">
-                    {s.assignment?.serial_number ?? <span className="text-gray-300">—</span>}
-                  </td>
                   <td className="px-4 py-2.5">
                     <StatusBadge status={s.assignment?.status ?? 'pending'} />
                   </td>

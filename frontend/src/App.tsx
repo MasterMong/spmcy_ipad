@@ -32,12 +32,13 @@ export default function App() {
             <Route path="/gallery" element={<Gallery />} />
             <Route path="/how-to" element={<HowTo />} />
 
+            <Route path="/progress" element={<Progress />} />
+
             {/* Password-protected (requires VITE_ADMIN_PASSWORD) */}
             <Route element={<ProtectedRoute />}>
               <Route path="/students" element={<Students />} />
               <Route path="/students/import" element={<ImportStudents />} />
               <Route path="/teachers" element={<Teachers />} />
-              <Route path="/progress" element={<Progress />} />
             </Route>
 
             {/* Admin-only: review student-uploaded photos (own password gate) */}
