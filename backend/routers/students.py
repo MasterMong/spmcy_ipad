@@ -23,6 +23,7 @@ def list_classrooms(db: Session = Depends(get_db)):
 def import_students_json(rows: List[StudentBase], db: Session = Depends(get_db)):
     from sqlalchemy.exc import IntegrityError
     created = updated = skipped = 0
+    skip_details: list[dict] = []
     for row in rows:
         existing = db.get(Student, row.student_id)
         try:
@@ -39,8 +40,14 @@ def import_students_json(rows: List[StudentBase], db: Session = Depends(get_db))
                     created += 1
         except IntegrityError:
             skipped += 1
+            # find which student already owns this national_id
+            conflict = db.execute(
+                select(Student).where(Student.national_id == row.national_id)
+            ).scalar_one_or_none()
+            reason = f"เลขบัตรฯ {row.national_id} ซ้ำกับนักเรียนรหัส {conflict.student_id} ({conflict.name})" if conflict else f"ข้อมูลซ้ำ (national_id={row.national_id})"
+            skip_details.append({"student_id": row.student_id, "name": row.name, "reason": reason})
     db.commit()
-    return {"imported": created + updated, "created": created, "updated": updated, "skipped": skipped}
+    return {"imported": created + updated, "created": created, "updated": updated, "skipped": skipped, "skip_details": skip_details}
 
 
 @router.get("", response_model=StudentListOut)

@@ -70,7 +70,18 @@ export function ImportStudents() {
 
   const studentMutation = useMutation({
     mutationFn: () => importStudents(studentRows.filter(r => !r.error)),
-    onSuccess: r => { qc.invalidateQueries({ queryKey: ['students'] }); qc.invalidateQueries({ queryKey: ['classrooms'] }); alert(`นำเข้านักเรียนสำเร็จ ${r.imported} รายการ`); navigate('/students') },
+    onSuccess: r => {
+      qc.invalidateQueries({ queryKey: ['students'] })
+      qc.invalidateQueries({ queryKey: ['classrooms'] })
+      let msg = `นำเข้านักเรียนสำเร็จ ${r.imported} รายการ`
+      if (r.skipped > 0 && r.skip_details?.length) {
+        msg += `\n\nข้ามไป ${r.skipped} รายการ:\n` + r.skip_details.map(d => `• ${d.student_id} (${d.name}): ${d.reason}`).join('\n')
+      } else if (r.skipped > 0) {
+        msg += `\n\nข้ามไป ${r.skipped} รายการ (ข้อมูลซ้ำ)`
+      }
+      alert(msg)
+      navigate('/students')
+    },
   })
 
   const teacherMutation = useMutation({

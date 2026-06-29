@@ -99,7 +99,7 @@ export async function getStudent(studentId: string): Promise<Student & { assignm
   return { ...student, assignment: mockAssignments.find(a => a.student_id === studentId) }
 }
 
-export async function importStudents(rows: Omit<Student, 'created_at'>[]): Promise<{ imported: number }> {
+export async function importStudents(rows: Omit<Student, 'created_at'>[]): Promise<{ imported: number; skipped: number; skip_details?: { student_id: string; name: string; reason: string }[] }> {
   if (!USE_MOCK) {
     return apiFetch('/students/import-json', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(rows) })
   }
