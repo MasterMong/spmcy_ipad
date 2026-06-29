@@ -113,6 +113,21 @@ export function Progress() {
         </div>
       )}
 
+      {/* Status legend */}
+      <div className="rounded-lg border-2 border-gray-200 bg-gray-50 px-4 py-3 grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-2">
+        {[
+          { status: 'pending',   desc: 'ยังไม่ได้จับคู่กับ iPad — รอดำเนินการ' },
+          { status: 'assigned',  desc: 'จับคู่ iPad แล้ว — รอส่งมอบให้นักเรียน' },
+          { status: 'delivered', desc: 'นักเรียนได้รับ iPad และยืนยันการรับแล้ว' },
+          { status: 'returned',  desc: 'นักเรียนคืน iPad คืนแล้ว' },
+        ].map(({ status, desc }) => (
+          <div key={status} className="flex items-center gap-2.5">
+            <StatusBadge status={status as 'pending' | 'assigned' | 'delivered' | 'returned'} />
+            <span className="text-xs text-gray-600">{desc}</span>
+          </div>
+        ))}
+      </div>
+
       {/* Filters */}
       <div className="flex flex-wrap gap-2">
         <div className="relative flex-1 min-w-[180px]">
