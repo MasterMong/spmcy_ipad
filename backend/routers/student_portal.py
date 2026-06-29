@@ -9,8 +9,37 @@ from sqlalchemy.orm import Session
 
 from database import get_db
 from models import DeliveryPhoto, DeviceAssignment, Student
+from sqlalchemy.orm import selectinload
 
 router = APIRouter(prefix="/api/student-portal", tags=["student-portal"])
+
+
+@router.get("/photos")
+def list_student_portal_photos(db: Session = Depends(get_db)):
+    photos = db.scalars(
+        select(DeliveryPhoto)
+        .where(DeliveryPhoto.source == "student_portal")
+        .options(
+            selectinload(DeliveryPhoto.assignment).selectinload(DeviceAssignment.student)
+        )
+        .order_by(DeliveryPhoto.taken_at.desc())
+    ).all()
+    result = []
+    for p in photos:
+        a = p.assignment
+        s = a.student if a else None
+        result.append({
+            "id": p.id,
+            "photo_url": p.photo_url,
+            "taken_at": p.taken_at.isoformat(),
+            "taken_by": p.taken_by,
+            "serial_number": a.serial_number if a else "",
+            "student_id": a.student_id if a else None,
+            "student_name": s.name if s else p.taken_by,
+            "grade": s.grade if s else None,
+            "class_room": s.class_room if s else None,
+        })
+    return result
 
 UPLOAD_DIR = os.getenv("UPLOAD_DIR", "uploads")
 os.makedirs(UPLOAD_DIR, exist_ok=True)

@@ -107,7 +107,7 @@ export async function importStudents(rows: Omit<Student, 'created_at'>[]): Promi
   const existingIds = new Set(mockStudents.map(s => s.student_id))
   const toAdd = newStudents.filter(s => !existingIds.has(s.student_id))
   mockStudents = [...mockStudents, ...toAdd]
-  return { imported: toAdd.length }
+  return { imported: toAdd.length, skipped: rows.length - toAdd.length }
 }
 
 export async function importTeachers(rows: Omit<Teacher, 'created_at'>[]): Promise<{ imported: number }> {
@@ -297,6 +297,23 @@ export async function studentUploadPhotos(
   const r = await fetch(`${BASE}/student-portal/upload-photos?${params}`, { method: 'POST', body: fd })
   if (!r.ok) throw new Error(`HTTP ${r.status}`)
   return r.json()
+}
+
+export interface StudentPortalPhoto {
+  id: string
+  photo_url: string
+  taken_at: string
+  taken_by: string
+  serial_number: string
+  student_id: string | null
+  student_name: string
+  grade: number | null
+  class_room: string | null
+}
+
+export async function getStudentPortalPhotos(): Promise<StudentPortalPhoto[]> {
+  if (!USE_MOCK) return apiFetch('/student-portal/photos')
+  return []
 }
 
 export async function getClassRooms(): Promise<{ grade: number; class_room: string }[]> {
