@@ -6,8 +6,21 @@ import { StatusBadge } from '../components/StatusBadge'
 import { AssignModal } from '../components/AssignModal'
 import { CancelPasswordModal } from '../components/CancelPasswordModal'
 import { useFilterParams } from '../hooks/useFilterParams'
-import { Search, Upload, Link2, CheckCircle, X, RotateCcw, GraduationCap, ArrowUpDown, ArrowUp } from 'lucide-react'
+import { Search, Upload, Download, Link2, CheckCircle, X, RotateCcw, GraduationCap, ArrowUpDown, ArrowUp } from 'lucide-react'
 import type { Student } from '../types'
+
+const STATUS_LABEL: Record<string, string> = {
+  assigned: 'จับคู่แล้ว', delivered: 'ส่งมอบแล้ว', returned: 'คืนแล้ว', pending: 'รอดำเนินการ',
+}
+
+function downloadCSV(filename: string, headers: string[], rows: (string | number)[][]) {
+  const esc = (v: string | number) => { const s = String(v); return /[,"\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s }
+  const csv = [headers as (string | number)[], ...rows].map(r => r.map(esc).join(',')).join('\n')
+  const blob = new Blob(['﻿' + csv], { type: 'text/csv;charset=utf-8;' })
+  const url = URL.createObjectURL(blob)
+  const a = document.createElement('a'); a.href = url; a.download = filename; a.click()
+  URL.revokeObjectURL(url)
+}
 
 type CancelTarget = { assignmentId: string; action: 'pair' | 'confirm'; label: string }
 
@@ -17,7 +30,23 @@ export function Students() {
   const { filters, page, set, setPage, clear, hasFilters } = useFilterParams()
   const [assigning, setAssigning] = useState<Student | null>(null)
   const [cancelTarget, setCancelTarget] = useState<CancelTarget | null>(null)
+  const [downloading, setDownloading] = useState(false)
   const qc = useQueryClient()
+
+  async function handleDownload() {
+    setDownloading(true)
+    try {
+      const all = await getStudents(filters, 1, 99999)
+      const rows = all.items.map(s => [
+        s.student_id, s.name, `ม.${s.grade}`, s.class_room,
+        s.student_number ?? '', s.assignment?.serial_number ?? '',
+        STATUS_LABEL[s.assignment?.status ?? 'pending'],
+      ])
+      downloadCSV('students_ipad.csv', ['รหัสนักเรียน', 'ชื่อ-นามสกุล', 'ชั้น', 'ห้อง', 'เลขที่', 'Serial Number', 'สถานะ'], rows)
+    } finally {
+      setDownloading(false)
+    }
+  }
   const { data: classRooms = [] } = useQuery({ queryKey: ['classrooms'], queryFn: getClassRooms })
   const grades = [...new Set(classRooms.map(c => c.grade))].sort()
 
@@ -52,12 +81,21 @@ export function Students() {
     <div className="p-4 sm:p-6 space-y-4">
       <div className="flex items-center justify-between">
         <h2 className="text-xl font-bold text-gray-900 flex items-center gap-2"><GraduationCap size={20} /> รายชื่อนักเรียน</h2>
-        <Link
-          to="/students/import"
-          className="flex items-center gap-1.5 rounded-md border-2 border-gray-400 px-3 py-1.5 text-sm font-bold text-gray-800 hover:bg-gray-200 hover:border-gray-500"
-        >
-          <Upload size={14} /> Import CSV
-        </Link>
+        <div className="flex gap-2">
+          <button
+            onClick={handleDownload}
+            disabled={downloading}
+            className="flex items-center gap-1.5 rounded-md border-2 border-gray-400 px-3 py-1.5 text-sm font-bold text-gray-800 hover:bg-gray-200 hover:border-gray-500 disabled:opacity-50"
+          >
+            <Download size={14} /> {downloading ? 'กำลังดาวน์โหลด...' : 'ดาวน์โหลด CSV'}
+          </button>
+          <Link
+            to="/students/import"
+            className="flex items-center gap-1.5 rounded-md border-2 border-gray-400 px-3 py-1.5 text-sm font-bold text-gray-800 hover:bg-gray-200 hover:border-gray-500"
+          >
+            <Upload size={14} /> Import CSV
+          </Link>
+        </div>
       </div>
 
       {/* Filters */}

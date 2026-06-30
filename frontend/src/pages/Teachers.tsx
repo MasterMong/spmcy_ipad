@@ -1,13 +1,25 @@
 import { useState } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { Link } from 'react-router-dom'
 import { getTeachers, getSubjectGroups, deleteTeacher, deleteAssignment, revertDelivery } from '../api/client'
 import { StatusBadge } from '../components/StatusBadge'
 import { AssignModal } from '../components/AssignModal'
 import { CancelPasswordModal } from '../components/CancelPasswordModal'
 import { useFilterParams } from '../hooks/useFilterParams'
-import { Search, UserPlus, Link2, CheckCircle, Trash2, Users, X, RotateCcw } from 'lucide-react'
+import { Search, UserPlus, Download, Link2, CheckCircle, Trash2, Users, X, RotateCcw } from 'lucide-react'
 import type { Teacher } from '../types'
+
+const STATUS_LABEL: Record<string, string> = {
+  assigned: 'จับคู่แล้ว', delivered: 'ส่งมอบแล้ว', returned: 'คืนแล้ว', pending: 'รอดำเนินการ',
+}
+
+function downloadCSV(filename: string, headers: string[], rows: (string | number)[][]) {
+  const esc = (v: string | number) => { const s = String(v); return /[,"\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s }
+  const csv = [headers as (string | number)[], ...rows].map(r => r.map(esc).join(',')).join('\n')
+  const blob = new Blob(['﻿' + csv], { type: 'text/csv;charset=utf-8;' })
+  const url = URL.createObjectURL(blob)
+  const a = document.createElement('a'); a.href = url; a.download = filename; a.click()
+  URL.revokeObjectURL(url)
+}
 
 type CancelTarget = { assignmentId: string; action: 'pair' | 'confirm'; label: string }
 
@@ -52,12 +64,27 @@ export function Teachers() {
     <div className="p-4 sm:p-6 space-y-4">
       <div className="flex items-center justify-between">
         <h2 className="text-xl font-bold text-gray-900 flex items-center gap-2"><Users size={20} /> รายชื่อครู</h2>
-        <button
-          onClick={() => setShowAdd(true)}
-          className="flex items-center gap-1.5 rounded-md border-2 border-gray-400 px-3 py-1.5 text-sm font-bold text-gray-800 hover:bg-gray-200 hover:border-gray-500"
-        >
-          <UserPlus size={14} /> เพิ่มครู
-        </button>
+        <div className="flex gap-2">
+          <button
+            onClick={() => {
+              const rows = teachers.map(t => [
+                t.name, t.email, t.subject_group,
+                t.assignment?.serial_number ?? '',
+                STATUS_LABEL[t.assignment?.status ?? 'pending'],
+              ])
+              downloadCSV('teachers_ipad.csv', ['ชื่อ-นามสกุล', 'อีเมล', 'กลุ่มสาระ', 'Serial Number', 'สถานะ'], rows)
+            }}
+            className="flex items-center gap-1.5 rounded-md border-2 border-gray-400 px-3 py-1.5 text-sm font-bold text-gray-800 hover:bg-gray-200 hover:border-gray-500"
+          >
+            <Download size={14} /> ดาวน์โหลด CSV
+          </button>
+          <button
+            onClick={() => setShowAdd(true)}
+            className="flex items-center gap-1.5 rounded-md border-2 border-gray-400 px-3 py-1.5 text-sm font-bold text-gray-800 hover:bg-gray-200 hover:border-gray-500"
+          >
+            <UserPlus size={14} /> เพิ่มครู
+          </button>
+        </div>
       </div>
 
       <div className="flex flex-wrap gap-2">
