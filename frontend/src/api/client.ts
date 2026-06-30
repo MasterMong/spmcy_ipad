@@ -84,7 +84,10 @@ export async function getStudents(filters: Filters = {}, page = 1, page_size = 5
   if (filters.status) students = students.filter(s => s.assignment?.status === filters.status)
   if (filters.q) {
     const q = filters.q.toLowerCase()
-    students = students.filter(s => s.name.toLowerCase().includes(q) || s.student_id.includes(q))
+    students = students.filter(s =>
+      s.name.toLowerCase().includes(q) || s.student_id.includes(q) ||
+      (s.assignment?.serial_number ?? '').toLowerCase().includes(q)
+    )
   }
   const total = students.length
   const pages = Math.max(1, Math.ceil(total / page_size))
@@ -139,7 +142,10 @@ export async function getTeachers(filters: Filters = {}): Promise<(Teacher & { a
   if (filters.status) teachers = teachers.filter(t => t.assignment?.status === filters.status)
   if (filters.q) {
     const q = filters.q.toLowerCase()
-    teachers = teachers.filter(t => t.name.toLowerCase().includes(q) || t.email.includes(q))
+    teachers = teachers.filter(t =>
+      t.name.toLowerCase().includes(q) || t.email.includes(q) ||
+      (t.assignment?.serial_number ?? '').toLowerCase().includes(q)
+    )
   }
   return teachers
 }

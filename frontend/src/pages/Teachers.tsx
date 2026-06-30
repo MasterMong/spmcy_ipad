@@ -92,7 +92,7 @@ export function Teachers() {
           <Search size={14} className="absolute left-2.5 top-2.5 text-gray-500" />
           <input
             className={`pl-8 w-full ${inputCls}`}
-            placeholder="ค้นหาชื่อ / อีเมล"
+            placeholder="ค้นหาชื่อ / อีเมล / Serial Number"
             value={filters.q ?? ''}
             onChange={e => set('q', e.target.value)}
           />

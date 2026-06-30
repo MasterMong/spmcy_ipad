@@ -73,7 +73,9 @@ def list_students(
     if class_room:
         stmt = stmt.where(Student.class_room == class_room)
     if q:
-        stmt = stmt.where(Student.name.contains(q) | Student.student_id.contains(q))
+        stmt = stmt.outerjoin(DeviceAssignment, DeviceAssignment.student_id == Student.student_id).where(
+            Student.name.contains(q) | Student.student_id.contains(q) | DeviceAssignment.serial_number.contains(q)
+        )
     students = list(db.scalars(stmt).all())
 
     if status:

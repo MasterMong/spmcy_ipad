@@ -4,7 +4,7 @@ from sqlalchemy import select
 from typing import List
 
 from database import get_db
-from models import Teacher
+from models import Teacher, DeviceAssignment
 from schemas import TeacherCreate, TeacherOut
 
 router = APIRouter(prefix="/api/teachers", tags=["teachers"])
@@ -44,7 +44,9 @@ def list_teachers(
     if subject_group:
         stmt = stmt.where(Teacher.subject_group == subject_group)
     if q:
-        stmt = stmt.where(Teacher.name.contains(q) | Teacher.email.contains(q))
+        stmt = stmt.outerjoin(DeviceAssignment, DeviceAssignment.teacher_email == Teacher.email).where(
+            Teacher.name.contains(q) | Teacher.email.contains(q) | DeviceAssignment.serial_number.contains(q)
+        )
     teachers = db.scalars(stmt).all()
 
     if status:
